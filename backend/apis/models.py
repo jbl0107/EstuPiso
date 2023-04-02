@@ -45,18 +45,18 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     dni = models.CharField(max_length=9, null=False, blank=False, unique=True)
-    name = models.CharField(max_length=30, blank=False, null=False)
+    name = models.CharField(max_length=50, blank=False, null=False)
     surname = models.CharField(max_length=50, blank=False, null=False)
-    username = models.CharField(max_length=30, unique=True, blank=False, null=False)
+    username = models.CharField(max_length=50, unique=True, blank=False, null=False)
     email = models.EmailField(unique=True, blank=False, null=False)
-    password = models.CharField(max_length=30, blank=False, null=False)
+    password = models.CharField(max_length=100, blank=False, null=False)
     telephone = PhoneNumberField(null = False, blank = False)
     photo = models.ImageField(upload_to='users/', null=True, blank=True)
     isActive = models.BooleanField(default=True)
     isAdministrator = models.BooleanField(default=False)
 
-    last_login = False
-    objetcs = UserManager()
+    
+    objects = UserManager()
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'name', 'surname', 'dni', 'telephone', 'photo']
 
@@ -85,7 +85,6 @@ class Student(User):
 
 class Owner(User):
 
-
     def __str__(self):
         return self.username
     
@@ -100,8 +99,6 @@ class PropertyType(models.TextChoices):
 
 class Rule(models.Model):
     name = models.CharField(max_length=35, null=False)
-
-
 
 
 class Photo(models.Model):
