@@ -99,15 +99,24 @@ class PropertyType(models.TextChoices):
 
 class Rule(models.Model):
     name = models.CharField(max_length=35, null=False)
+    
+    def __str__(self):
+        return self.name
+    
 
 
 class Photo(models.Model):
     photo = models.ImageField(upload_to='properties/', null=False, blank=False)
 
 
+
+
 class Service(models.Model):
     name = models.CharField(max_length=35, null=False)
 
+    def __str__(self):
+        return self.name
+    
 
 
 # ManyToMany crea la tabla PhotoXProperty automaticamente
@@ -134,7 +143,8 @@ class Message(models.Model):
     userSender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sentMessagesU',null=True, blank=True)
     userRecipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receivedMessagesU', null=True, blank=True)
 
-
+    def __str__(self):
+        return self.content
 
 
 
@@ -146,6 +156,8 @@ class UserValoration(models.Model):
     valuer = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='userRatings')
     valued = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='evaluationsReceived')
 
+    def __str__(self):
+        return self.value
 
 
 
@@ -157,6 +169,9 @@ class PropertyValoration(models.Model):
     valuer = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='propertyAssessment')
     property = models.ForeignKey(Property, on_delete=models.CASCADE, null=False, related_name='propertyRatings')
 
+    def __str__(self):
+        return self.value
+    
 
 
 # on_delete = cascade --> si borro un student, se borran todas sus reservas grupales.
@@ -184,7 +199,8 @@ class Experience(models.Model):
     turism = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], null=False)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, related_name="studentExperiences")
 
-
+    def __str__(self):
+        return self.content
 
 class InterestServiceType(models.TextChoices):
     HEALTH = "Salud"
@@ -199,6 +215,9 @@ class InterestService(models.Model):
     name = models.CharField(max_length=40, null=False, blank=False)
     direction = models.CharField(max_length=150, null=False, blank=False)
     type = models.CharField(max_length=17 ,choices=InterestServiceType.choices, default="-", null=False)
+
+    def __str__(self):
+        return self.name
 
 
 class InterestServiceProperty(models.Model):
