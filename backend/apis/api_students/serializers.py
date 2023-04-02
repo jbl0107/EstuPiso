@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from apis.models import *
 
-####### Students
+
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
@@ -27,5 +27,4 @@ class StudentSerializer(serializers.ModelSerializer):
         updated_student.set_password(validated_data['password'])
         updated_student.save()
         return updated_student
-#######
 

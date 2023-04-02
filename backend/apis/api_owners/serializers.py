@@ -2,9 +2,9 @@ from rest_framework import serializers
 from apis.models import *
 
 
-class UserSerializer(serializers.ModelSerializer):
+class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Owner
         fields = '__all__'
 
 
@@ -17,15 +17,14 @@ class UserSerializer(serializers.ModelSerializer):
             return value
         
     def create(self, validate_data):
-        user = User(**validate_data)
-        user.set_password(validate_data['password'])
-        user.save()
-        return user
+        owner = Owner(**validate_data)
+        owner.set_password(validate_data['password'])
+        owner.save()
+        return owner
     
     def update(self, instance, validated_data):
-        updated_user = super().update(instance, validated_data)
-        updated_user.set_password(validated_data['password'])
-        updated_user.save()
-        return updated_user
-
+        updated_owner = super().update(instance, validated_data)
+        updated_owner.set_password(validated_data['password'])
+        updated_owner.save()
+        return updated_owner
 
