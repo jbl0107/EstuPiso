@@ -3,24 +3,24 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 
-from apis.models import Owner
-from .serializers import OwnerSerializer
+from apis.models import Rule
+from .serializers import RuleSerializer
 
 
 @api_view(['GET', 'POST'])
-def owner_api_view(request):
+def rule_api_view(request):
 
     if request.method == 'GET':
 
         #queryset
-        owners = Owner.objects.all()
-        serializer = OwnerSerializer(owners, many=True)
+        rules = Rule.objects.all()
+        serializer = RuleSerializer(rules, many=True)
         return Response(serializer.data, status = status.HTTP_200_OK)
     
     #create
     elif request.method == 'POST':
         data = request.data
-        serializer = OwnerSerializer(data = data) 
+        serializer = RuleSerializer(data = data) 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
@@ -30,28 +30,28 @@ def owner_api_view(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def owner_detail_api_view(request, id):
+def rule_detail_api_view(request, id):
         
     # queryset
-    owner = Owner.objects.filter(id=id).first()
+    rule = Rule.objects.filter(id=id).first()
 
     # validacion
-    if owner:
+    if rule:
         
         if request.method == 'GET':
-            serializer = OwnerSerializer(owner)
+            serializer = RuleSerializer(rule)
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         elif request.method == 'PUT':
             data = request.data
-            serializer = OwnerSerializer(owner, data = data)
+            serializer = RuleSerializer(rule, data = data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         elif request.method == 'DELETE':
-            owner.delete()
-            return Response({'message':"Propietario eliminado correctamente!"}, status=status.HTTP_200_OK)
+            rule.delete()
+            return Response({'message':"Norma eliminada correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una norma con estos datos"}, status=status.HTTP_400_BAD_REQUEST)

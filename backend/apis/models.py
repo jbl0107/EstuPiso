@@ -98,7 +98,7 @@ class PropertyType(models.TextChoices):
 
 
 class Rule(models.Model):
-    name = models.CharField(max_length=35, null=False)
+    name = models.CharField(max_length=100, null=False)
     
     def __str__(self):
         return self.name
@@ -112,7 +112,7 @@ class Photo(models.Model):
 
 
 class Service(models.Model):
-    name = models.CharField(max_length=35, null=False)
+    name = models.CharField(max_length=100, null=False)
 
     def __str__(self):
         return self.name
