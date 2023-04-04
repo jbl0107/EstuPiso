@@ -150,8 +150,8 @@ class Property(models.Model):
 class Message(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=False, blank=False)
     content = models.TextField(null=False, blank=False)
-    userSender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sentMessagesU',null=True, blank=True)
-    userRecipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receivedMessagesU', null=True, blank=True)
+    userSender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sentMessagesU',null=False, blank=False)
+    userRecipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receivedMessagesU', null=False, blank=False)
 
     def __str__(self):
         return self.content
