@@ -98,7 +98,7 @@ class PropertyType(models.TextChoices):
 
 
 class Rule(models.Model):
-    name = models.CharField(max_length=100, null=False)
+    name = models.CharField(max_length=100, null=False, blank=False, unique=True)
     
     def __str__(self):
         return self.name
@@ -108,11 +108,13 @@ class Rule(models.Model):
 class Photo(models.Model):
     photo = models.ImageField(upload_to='properties/', null=False, blank=False)
 
+    
+
 
 
 
 class Service(models.Model):
-    name = models.CharField(max_length=100, null=False)
+    name = models.CharField(max_length=100, null=False, blank=False, unique=True)
 
     def __str__(self):
         return self.name
@@ -128,10 +130,18 @@ class Property(models.Model):
     dormitories = models.IntegerField(null=False)
     size = models.IntegerField(null=False)
     baths = models.IntegerField(null=False)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=False)
-    rules = models.ManyToManyField(Rule, blank=True)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=False, related_name='properties')
+    rules = models.ManyToManyField(Rule, blank=True, related_name='rules')
     photos = models.ManyToManyField(Photo, blank=False)
     services = models.ManyToManyField(Service, blank=True)
+
+    class Meta:
+        unique_together = ('localization', 'type', 'price', 'size')
+        verbose_name_plural = "Properties"
+    
+    def __str__(self):
+        return f'{self.title}. Owner: {self.owner}'
+    
 
     
 
