@@ -12,7 +12,7 @@ from apis.api_groupReservations.api import groupReservation_api_view, groupReser
 from apis.api_experiences.api import experience_api_view, experience_detail_api_view, experience_student_api_view
 from apis.api_interestServices.api import interestService_api_view, interestService_detail_api_view
 from apis.api_interestServicesProperty.api import interestServiceProperty_api_view, interestServiceProperty_detail_api_view, interestServiceProperty_property_api_view
-from apis.api_studentAnnouncements.api import studentAnnouncement_api_view, studentAnnouncement_detail_api_view
+from apis.api_studentAnnouncements.api import studentAnnouncement_api_view, studentAnnouncement_detail_api_view, studentAnnouncement_student_api_view
 
 
 
@@ -74,6 +74,8 @@ urlpatterns = [
 
     path('studentAnnouncements/', studentAnnouncement_api_view, name='studentAnnouncement_api'),
     path('studentAnnouncements/<int:id>', studentAnnouncement_detail_api_view, name='studentAnnouncement_detail_api'),
+    path('studentAnnouncements/student/<int:id>', studentAnnouncement_student_api_view, name='studentAnnouncement_student_api'),
+
 
 
 ]

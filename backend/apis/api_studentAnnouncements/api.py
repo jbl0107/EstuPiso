@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 
-from apis.models import StudentAnnouncement
+from apis.models import StudentAnnouncement, Student
 from .serializers import StudentAnnouncementSerializer
 
 
@@ -11,7 +11,6 @@ from .serializers import StudentAnnouncementSerializer
 def studentAnnouncement_api_view(request):
 
     if request.method == 'GET':
-
         #queryset
         studentAnnouncements = StudentAnnouncement.objects.all()
         serializer = StudentAnnouncementSerializer(studentAnnouncements, many=True)
@@ -55,3 +54,28 @@ def studentAnnouncement_detail_api_view(request, id):
             return Response({'message':"Anuncio de estudiante eliminado correctamente!"}, status=status.HTTP_200_OK)
         
     return Response({'message':"No se ha encontrado un anuncio de estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def studentAnnouncement_student_api_view(request, id):
+        
+    # queryset
+    student = Student.objects.filter(id=id).first()
+
+    # validacion
+    if student:
+        
+        if request.method == 'GET':
+            all_announcements = StudentAnnouncement.objects.all()
+
+            studentAnnouncement = None
+
+            for a in all_announcements:
+                if a.student == student:
+                    studentAnnouncement = a
+                    break
+
+            serializer = StudentAnnouncementSerializer(studentAnnouncement)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+    return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
