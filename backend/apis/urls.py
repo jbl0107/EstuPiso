@@ -8,6 +8,9 @@ from apis.api_services.api import service_api_view, service_detail_api_view
 from apis.api_properties.api import property_api_view, property_detail_api_view, property_rules_api_view, property_photos_api_view, property_services_api_view, property_valorations_api_view
 from apis.api_messages.api import message_api_view, message_detail_api_view, message_user_api_view, message_user_conversation_api_view
 from apis.api_valoration.api import valoration_user_api_view, valoration_user_detail_api_view, valoration_property_api_view, valoration_property_detail_api_view
+from apis.api_groupReservations.api import groupReservation_api_view, groupReservation_detail_api_view, groupReservation_student_api_view
+
+
 
 urlpatterns = [
     path('users/', user_api_view, name='user_api'),
@@ -49,5 +52,9 @@ urlpatterns = [
     path('valorations/users/<int:id>', valoration_user_detail_api_view, name='valoration_user_detail_api'),
     path('valorations/properties/', valoration_property_api_view, name='valoration_property_api'),
     path('valorations/properties/<int:id>', valoration_property_detail_api_view, name='valoration_property_detail_api'),  
+
+    path('groupReservations/', groupReservation_api_view, name='groupReservation_api'),
+    path('groupReservations/<int:id>', groupReservation_detail_api_view, name='groupReservation_detail_api'),
+    path('groupReservations/student/<int:id>', groupReservation_student_api_view, name='groupReservation_student_api')
 
 ]

@@ -193,7 +193,7 @@ class GroupReservation(models.Model):
     email = models.EmailField(blank=False, null=False)
     duration = models.CharField(max_length=30, blank=False, null=False)
     student = models.ForeignKey(Student, null=False, on_delete=models.CASCADE, related_name="groupReservationStudent")
-    admin = models.ForeignKey(User, null=False, on_delete=models.DO_NOTHING, related_name="groupReservationAssigned") 
+    admin = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING, related_name="groupReservationAssigned") 
 
 
 
