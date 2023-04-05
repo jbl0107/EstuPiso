@@ -268,7 +268,7 @@ class Gender(models.TextChoices):
 
 class StudentAnnouncement(models.Model):
     description = models.TextField(null=False, blank=False)
-    photo = models.ImageField(upload_to='studentsAnnouncement/', null=False, blank=False)
+    photo = models.ImageField(upload_to='studentsAnnouncement/', null=True)
     age = models.IntegerField(null=False)
     pet = models.BooleanField()
     smoker = models.BooleanField()
