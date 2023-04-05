@@ -209,8 +209,14 @@ class Experience(models.Model):
     turism = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], null=False)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, related_name="studentExperiences")
 
+    class Meta:
+        unique_together = ('place', 'student')
+
     def __str__(self):
         return self.content
+    
+
+
 
 class InterestServiceType(models.TextChoices):
     HEALTH = "Salud"
