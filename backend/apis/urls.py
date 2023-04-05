@@ -10,6 +10,7 @@ from apis.api_messages.api import message_api_view, message_detail_api_view, mes
 from apis.api_valoration.api import valoration_user_api_view, valoration_user_detail_api_view, valoration_property_api_view, valoration_property_detail_api_view
 from apis.api_groupReservations.api import groupReservation_api_view, groupReservation_detail_api_view, groupReservation_student_api_view
 from apis.api_experiences.api import experience_api_view, experience_detail_api_view, experience_student_api_view
+from apis.api_interestServices.api import interestService_api_view, interestService_detail_api_view
 
 
 urlpatterns = [
@@ -60,5 +61,8 @@ urlpatterns = [
     path('experiences/', experience_api_view, name='experience_api'),
     path('experiences/<int:id>', experience_detail_api_view, name='experience_detail_api'),
     path('experiences/student/<int:id>', experience_student_api_view, name='experience_student_api'),
+
+    path('interestServices/', interestService_api_view, name='interestService_api'),
+    path('interestServices/<int:id>', interestService_detail_api_view, name='interestService_detail_api'),
 
 ]

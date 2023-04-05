@@ -217,7 +217,6 @@ class Experience(models.Model):
     
 
 
-
 class InterestServiceType(models.TextChoices):
     HEALTH = "Salud"
     FEEDING = "Alimentación"
@@ -228,9 +227,13 @@ class InterestServiceType(models.TextChoices):
 
 
 class InterestService(models.Model):
-    name = models.CharField(max_length=40, null=False, blank=False)
-    direction = models.CharField(max_length=150, null=False, blank=False)
-    type = models.CharField(max_length=17 ,choices=InterestServiceType.choices, default="-", null=False)
+    name = models.CharField(max_length=70, null=False, blank=False)
+    direction = models.CharField(max_length=200, null=False, blank=False)
+    type = models.CharField(max_length=20 ,choices=InterestServiceType.choices, default="-", null=False)
+
+    class Meta:
+        unique_together = ('name', 'direction', 'type')
+
 
     def __str__(self):
         return self.name
