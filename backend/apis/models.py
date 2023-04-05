@@ -160,7 +160,7 @@ class Message(models.Model):
 
 class UserValoration(models.Model):
     value = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], null=False)
-    title = models.CharField(max_length=25, null=False)
+    title = models.CharField(max_length=50, null=False)
     review = models.CharField(max_length=1000, null=False)
     date = models.DateField(auto_now_add=True ,null=False, blank=False)
     valuer = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='userRatings')
@@ -173,10 +173,10 @@ class UserValoration(models.Model):
 
 class PropertyValoration(models.Model):
     value = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], null=False)
-    title = models.CharField(max_length=25, null=False)
+    title = models.CharField(max_length=50, null=False)
     review = models.CharField(max_length=1000, null=False)
     date = models.DateField(auto_now_add=True ,null=False, blank=False)
-    valuer = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='propertyAssessment')
+    valuer = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, related_name='propertyAssessment')
     property = models.ForeignKey(Property, on_delete=models.CASCADE, null=False, related_name='propertyRatings')
 
     def __str__(self):

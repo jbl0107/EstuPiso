@@ -3,8 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 
-from apis.models import User
+from apis.models import User, UserValoration
 from .serializers import UserSerializer
+from apis.api_valoration.serializers import UserValorationSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -55,3 +56,53 @@ def user_detail_api_view(request, id):
             return Response({'message':"Usuario eliminado correctamente!"}, status=status.HTTP_200_OK)
         
     return Response({'message':"No se ha encontrado un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+def user_valoration_received_api_view(request, id):
+
+    user = User.objects.filter(id=id).first()
+
+    if user:
+
+        if request.method == 'GET':
+
+            #queryset
+            valorations = UserValoration.objects.all()
+            res = []
+            
+            for v in valorations:
+                if v.valued == user:
+                    res.append(v)
+
+            serializer = UserValorationSerializer(res, many=True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+    
+
+    return Response({'message': "No se ha encontrado un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+
+
+
+@api_view(['GET'])
+def user_valoration_done_to_users_api_view(request, id):
+
+    user = User.objects.filter(id=id).first()
+
+    if user:
+
+        if request.method == 'GET':
+
+            #queryset
+            valorations = UserValoration.objects.all()
+            res = []
+            
+            for v in valorations:
+                if v.valuer == user:
+                    res.append(v)
+
+            serializer = UserValorationSerializer(res, many=True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+    
+
+    return Response({'message': "No se ha encontrado un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 

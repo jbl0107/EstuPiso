@@ -3,9 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 
-from apis.models import Student
+from apis.models import Student, PropertyValoration
 from .serializers import StudentSerializer
-
+from apis.api_valoration.serializers import PropertyValorationSerializer
 
 @api_view(['GET', 'POST'])
 def student_api_view(request):
@@ -55,3 +55,28 @@ def student_detail_api_view(request, id):
             return Response({'message':"Estudiante eliminado correctamente!"}, status=status.HTTP_200_OK)
         
     return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+def student_valoration_done_to_properties_api_view(request, id):
+
+    student = Student.objects.filter(id=id).first()
+
+    if student:
+
+        if request.method == 'GET':
+
+            #queryset
+            valorations = PropertyValoration.objects.all()
+            res = []
+            
+            for v in valorations:
+                if v.valuer == student:
+                    res.append(v)
+
+            serializer = PropertyValorationSerializer(res, many=True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+    
+
+    return Response({'message': "No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 

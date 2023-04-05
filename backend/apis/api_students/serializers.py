@@ -16,6 +16,14 @@ class StudentSerializer(serializers.ModelSerializer):
             
             return value
         
+        
+    def validate_isAdministrator(self, value):
+        if value:
+            raise serializers.ValidationError('Un estudiante no puede ser administrador')
+            
+        return value
+        
+        
     def create(self, validate_data):
         student = Student(**validate_data)
         student.set_password(validate_data['password'])

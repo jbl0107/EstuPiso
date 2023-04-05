@@ -16,6 +16,14 @@ class OwnerSerializer(serializers.ModelSerializer):
             
             return value
         
+
+    def validate_isAdministrator(self, value):
+        if value:
+            raise serializers.ValidationError('Un propietario no puede ser administrador')
+            
+        return value
+
+
     def create(self, validate_data):
         owner = Owner(**validate_data)
         owner.set_password(validate_data['password'])

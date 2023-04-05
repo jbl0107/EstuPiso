@@ -3,11 +3,12 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 
-from apis.models import Property
+from apis.models import Property, PropertyValoration
 from .serializers import PropertySerializer
 from apis.api_rules.serializers import RuleSerializer
 from apis.api_photos.serializers import PhotoSerializer
 from apis.api_services.serializers import ServiceSerializer
+from apis.api_valoration.serializers import PropertyValorationSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -105,4 +106,29 @@ def property_services_api_view(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         
+    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+
+
+
+@api_view(['GET'])
+def property_valorations_api_view(request, id):
+
+    property = Property.objects.filter(id=id).first()
+
+    if property:
+
+        if request.method == 'GET':
+
+            #queryset
+            valorations = PropertyValoration.objects.all()
+            res = []
+            
+            for v in valorations:
+                if v.property == property:
+                    res.append(v)
+
+            serializer = PropertyValorationSerializer(res, many=True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+    
+
     return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
