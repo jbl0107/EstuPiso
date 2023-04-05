@@ -240,12 +240,15 @@ class InterestService(models.Model):
 
 
 class InterestServiceProperty(models.Model):
-    distance = models.CharField(max_length=7 ,null=False, blank=False)
+    distance = models.CharField(max_length=15 ,null=False, blank=False)
     busTime = models.CharField(max_length=20, null=False, blank=False)
     carTime = models.CharField(max_length=20 ,null=False, blank=False)
     walkTime = models.CharField(max_length=20, null=False, blank=False)
     interestService = models.ForeignKey(InterestService, on_delete=models.CASCADE, null=False)
     property = models.ForeignKey(Property, null=False, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('distance', 'busTime', 'carTime', 'walkTime', 'interestService', 'property')
 
 
 
