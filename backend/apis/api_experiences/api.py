@@ -25,7 +25,7 @@ def experience_api_view(request):
     elif request.method == 'POST':
         data = request.data
         if int(data.get('student')) != request.user.id and request.user.isAdministrator == False:
-            return Response({'message': 'No puedes crear una experiencia para otro estudiante'}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({'message': 'No puede crear una experiencia para otro estudiante'}, status=status.HTTP_400_BAD_REQUEST) 
 
         serializer = ExperienceSerializer(data = data) 
         if serializer.is_valid():
@@ -67,7 +67,7 @@ def experience_detail_api_view(request, id):
                 return Response({'message':"Experiencia eliminada correctamente!"}, status=status.HTTP_200_OK)
                 
         else:
-            return Response({'message':"Esta experiencia no es suya"}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'message':"No puede eliminar una experiencia que no le pertenece"}, status=status.HTTP_403_FORBIDDEN)
         
     return Response({'message':"No se ha encontrado una experiencia con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
 

@@ -8,7 +8,7 @@ from apis.api_services.api import service_api_view, service_detail_api_view
 from apis.api_properties.api import property_api_view, property_detail_api_view, property_rules_api_view, property_photos_api_view, property_services_api_view, property_valorations_api_view
 from apis.api_messages.api import message_api_view, message_detail_api_view, message_user_api_view, message_user_conversation_api_view
 from apis.api_valoration.api import valoration_user_api_view, valoration_user_detail_api_view, valoration_property_api_view, valoration_property_detail_api_view
-from apis.api_groupReservations.api import groupReservation_api_view, groupReservation_detail_api_view, groupReservation_student_api_view
+from apis.api_groupReservations.api import groupReservation_api_view, groupReservation_detail_api_view, groupReservation_student_api_view, groupReservation_post_api_view
 from apis.api_experiences.api import experience_api_view, experience_detail_api_view, experience_student_api_view
 from apis.api_interestServices.api import interestService_api_view, interestService_detail_api_view
 from apis.api_interestServicesProperty.api import interestServiceProperty_api_view, interestServiceProperty_detail_api_view, interestServiceProperty_property_api_view
@@ -36,7 +36,6 @@ urlpatterns = [
     path('students/', student_api_view, name='student_api'),
     path('students/<int:id>', student_detail_api_view, name='student_detail_api'),
     path('students/<int:id>/valorations/done/properties/', student_valoration_done_to_properties_api_view, name='student_valorations_done_to_properties_api'),
-
 
     path('owners/', owner_api_view, name='owner_api'),
     path('owners/<int:id>', owner_detail_api_view, name='owner_detail_api'),
@@ -69,6 +68,7 @@ urlpatterns = [
     path('valorations/properties/<int:id>', valoration_property_detail_api_view, name='valoration_property_detail_api'),  
 
     path('groupReservations/', groupReservation_api_view, name='groupReservation_api'),
+    path('groupReservations/new', groupReservation_post_api_view, name='groupReservation_api'),
     path('groupReservations/<int:id>', groupReservation_detail_api_view, name='groupReservation_detail_api'),
     path('groupReservations/student/<int:id>', groupReservation_student_api_view, name='groupReservation_student_api'),
 
