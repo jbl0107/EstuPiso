@@ -15,8 +15,19 @@ from apis.api_interestServicesProperty.api import interestServiceProperty_api_vi
 from apis.api_studentAnnouncements.api import studentAnnouncement_api_view, studentAnnouncement_detail_api_view, studentAnnouncement_student_api_view
 
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from .views import LogoutView
+
 
 urlpatterns = [
+
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'), #devuelve token de acceso y token de refresco
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('logout/', LogoutView.as_view(), name='token_logout'),
+
     path('users/', user_api_view, name='user_api'),
     path('users/<int:id>', user_detail_api_view, name='user_detail_api'),
     path('users/<int:id>/valorations/received', user_valoration_received_api_view, name='user_valorations_received_api'),
