@@ -1,7 +1,7 @@
 from django.urls import path
 from apis.api_users.api import user_api_view, user_detail_api_view, user_valoration_received_api_view, user_valoration_done_to_users_api_view
 from apis.api_students.api import student_api_view, student_detail_api_view, student_valoration_done_to_properties_api_view
-from apis.api_owners.api import owner_api_view, owner_detail_api_view, owner_properties_api_view
+from apis.api_owners.api import owner_api_view, owner_detail_api_view, owner_properties_api_view, owner_post_api_view
 from apis.api_rules.api import rule_api_view, rule_detail_api_view
 from apis.api_photos.api import photo_api_view, photo_detail_api_view
 from apis.api_services.api import service_api_view, service_detail_api_view
@@ -38,8 +38,10 @@ urlpatterns = [
     path('students/<int:id>/valorations/done/properties/', student_valoration_done_to_properties_api_view, name='student_valorations_done_to_properties_api'),
 
     path('owners/', owner_api_view, name='owner_api'),
+    path('owners/new/', owner_post_api_view, name='owner_post_api'),
     path('owners/<int:id>', owner_detail_api_view, name='owner_detail_api'),
     path('owners/<int:id>/properties', owner_properties_api_view, name='owner_properties_api'),
+    
 
     path('rules/', rule_api_view, name='rule_api'),
     path('rules/<int:id>', rule_detail_api_view, name='rule_detail_api'),

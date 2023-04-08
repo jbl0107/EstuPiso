@@ -55,22 +55,22 @@ def message_detail_api_view(request, id):
     if message:
         
 
-            if request.method == 'GET':
-                if (request.user.id == message.userSender.id or request.user.id == message.userRecipient.id) or request.user.isAdministrator:
-                    serializer = MessageSerializer(message)
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                else:
-                    return Response({'message':"No puede obtener mensajes en los que no esté involucrado"}, status=status.HTTP_400_BAD_REQUEST)
+        if request.method == 'GET':
+            if (request.user.id == message.userSender.id or request.user.id == message.userRecipient.id) or request.user.isAdministrator:
+                serializer = MessageSerializer(message)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'message':"No puede obtener mensajes en los que no esté involucrado"}, status=status.HTTP_400_BAD_REQUEST)
+    
         
-           
-            elif request.method == 'DELETE':
-                if request.user.id == message.userSender.id or request.user.isAdministrator:
-                
-                    message.delete()
-                    return Response({'message':"Mensaje eliminado correctamente!"}, status=status.HTTP_200_OK)
+        elif request.method == 'DELETE':
+            if request.user.id == message.userSender.id or request.user.isAdministrator:
+            
+                message.delete()
+                return Response({'message':"Mensaje eliminado correctamente!"}, status=status.HTTP_200_OK)
 
-                else:
-                    return Response({'message':"No puede borrar un mensaje que no haya enviado"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'message':"No puede borrar un mensaje que no haya enviado"}, status=status.HTTP_400_BAD_REQUEST)
     
     return Response({'message':"No se ha encontrado un mensaje con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
 
