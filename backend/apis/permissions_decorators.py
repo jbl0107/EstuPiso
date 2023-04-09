@@ -17,3 +17,8 @@ class IsOwnerOrAdmin(BasePermission):
 class IsOwner(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and Owner.objects.filter(id=request.user.id).exists()
+    
+
+class IsAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.isAdministrator and request.user.is_authenticated
