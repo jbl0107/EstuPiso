@@ -46,6 +46,7 @@ def rule_api_view(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes([JWTAuthentication])
 def rule_detail_api_view(request, id):
 
     def check_permissions(request):
