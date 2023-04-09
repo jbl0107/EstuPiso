@@ -11,7 +11,7 @@ from apis.api_owners.api import (
 from apis.api_rules.api import rule_api_view, rule_detail_api_view
 
 from apis.api_photos.api import (
-    photo_api_view, photo_detail_api_view)
+    photo_api_view, photo_detail_api_view, photo_owner_detail_api_view)
 
 from apis.api_services.api import service_api_view, service_detail_api_view
 
@@ -71,6 +71,8 @@ urlpatterns = [
 
     path('photos/', photo_api_view, name='photo_api'),
     path('photos/<int:id>', photo_detail_api_view, name='photo_detail_api'), 
+    path('photos/owner/<int:id>', photo_owner_detail_api_view, name='photo_owner_detail_api'), 
+
 
     path('services/', service_api_view, name='service_api'),
     path('services/<int:id>', service_detail_api_view, name='service_detail_api'),    

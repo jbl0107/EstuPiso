@@ -7,7 +7,7 @@ from apis.permissions_decorators import IsOwnerOrAdmin, IsOwner
 from rest_framework.exceptions import PermissionDenied
 
 
-from apis.models import Photo
+from apis.models import Photo, Owner
 from .serializers import PhotoSerializer
 
 
@@ -86,3 +86,26 @@ def photo_detail_api_view(request, id):
 
         
     return Response({'message':"No se ha encontrado una foto con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated, IsOwnerOrAdmin])
+def photo_owner_detail_api_view(request, id):
+
+    owner = Owner.objects.filter(id=id)
+    print(owner)
+    if owner:
+         
+         if request.method == 'GET':
+            if not (request.user.id == id or request.user.isAdministrator):
+                return Response({'message':"No puede ver todas las fotos de inmuebles de otro propietario"}, status=status.HTTP_403_FORBIDDEN)
+            
+            photos = Photo.objects.filter(owner__in=owner)
+            serializer = PhotoSerializer(photos, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+         
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+
+
