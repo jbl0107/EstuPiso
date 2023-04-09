@@ -3,7 +3,7 @@ from apis.api_users.api import user_api_view, user_detail_api_view, user_valorat
 from apis.api_students.api import student_api_view, student_detail_api_view, student_valoration_done_to_properties_api_view
 from apis.api_owners.api import owner_api_view, owner_detail_api_view, owner_properties_api_view, owner_post_api_view
 from apis.api_rules.api import rule_api_view, rule_detail_api_view
-from apis.api_photos.api import photo_api_view, photo_detail_api_view
+from apis.api_photos.api import photo_api_view, photo_detail_api_view, photo_post_api_view, photo_delete_detail_api_view
 from apis.api_services.api import service_api_view, service_detail_api_view
 from apis.api_properties.api import property_api_view, property_detail_api_view, property_rules_api_view, property_photos_api_view, property_services_api_view, property_valorations_api_view
 from apis.api_messages.api import message_api_view, message_detail_api_view, message_user_api_view, message_user_conversation_api_view
@@ -47,7 +47,9 @@ urlpatterns = [
     path('rules/<int:id>', rule_detail_api_view, name='rule_detail_api'),
 
     path('photos/', photo_api_view, name='photo_api'),
-    path('photos/<int:id>', photo_detail_api_view, name='photo_detail_api'),   
+    path('photos/new/', photo_post_api_view, name='photo_post_api'),
+    path('photos/details/<int:id>', photo_detail_api_view, name='photo_detail_api'), 
+    path('photos/<int:id>', photo_delete_detail_api_view, name='photo_delete_api'),  
 
     path('services/', service_api_view, name='service_api'),
     path('services/<int:id>', service_detail_api_view, name='service_detail_api'),    
