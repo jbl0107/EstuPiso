@@ -110,7 +110,7 @@ def user_detail_api_view(request, id):
             data = request.data
             
             if data.get('isAdministrator') and aux2 == False and not request.user.isAdministrator:
-                return Response({'message':'No puede hacer administrador a otro usuario sin ser administrador'}, status=status.HTTP_403_FORBIDDEN)
+                return Response({'message':'No puede hacerse administrador a si mismo'}, status=status.HTTP_403_FORBIDDEN)
 
             if data.get('isActive') == False and not request.user.isAdministrator:
                 return Response({'message':'No puede desactivar su cuenta sin ser administrador'}, status=status.HTTP_403_FORBIDDEN)
@@ -177,14 +177,6 @@ def user_valoration_done_to_users_api_view(request, id):
                 return Response({'message':'Solo puede obtener un listado de todas sus valoraciones, no de otros usuarios'}, status=status.HTTP_403_FORBIDDEN)
 
             #queryset
-            '''
-            valorations = UserValoration.objects.all()
-            res = []
-            
-            for v in valorations:
-                if v.valuer == user:
-                    res.append(v)
-'''
             res = UserValoration.objects.filter(valuer=user)
             serializer = UserValorationSerializer(res, many=True)
             return Response(serializer.data, status = status.HTTP_200_OK)
