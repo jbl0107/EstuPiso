@@ -25,7 +25,7 @@ def experience_api_view(request):
     elif request.method == 'POST':
         data = request.data
         if int(data.get('student')) != request.user.id and request.user.isAdministrator == False:
-            return Response({'message': 'No puede crear una experiencia para otro estudiante'}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({'message': 'No puede crear una experiencia para otro estudiante'}, status=status.HTTP_403_FORBIDDEN) 
 
         serializer = ExperienceSerializer(data = data) 
         if serializer.is_valid():
@@ -90,7 +90,7 @@ def experience_student_api_view(request, id):
             serializer = ExperienceSerializer(experiences, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({'message': 'Solo puede obtener todas sus experiencias'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Solo puede obtener todas sus experiencias'}, status=status.HTTP_403_FORBIDDEN)
 
    else:
 

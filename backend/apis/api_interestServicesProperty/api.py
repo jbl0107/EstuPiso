@@ -7,7 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apis.models import InterestServiceProperty, Property
 from .serializers import InterestServicePropertySerializer
 from rest_framework.exceptions import PermissionDenied
-from apis.permissions_decorators import IsOwnerOrAdmin, IsAdmin
+from apis.permissions_decorators import IsAdmin
 
 
 

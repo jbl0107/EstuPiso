@@ -17,7 +17,7 @@ def message_api_view(request):
     if request.method == 'GET':
         
         if not request.user.isAdministrator:
-            return Response({'message': 'No puede obtener los mensajes del resto de usuarios registrados'}, status=status.HTTP_400_BAD_REQUEST) 
+            return Response({'message': 'No puede obtener los mensajes del resto de usuarios registrados'}, status=status.HTTP_403_FORBIDDEN) 
 
         #queryset
         messages = Message.objects.all()
@@ -37,7 +37,7 @@ def message_api_view(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         else:
-            return Response({'message': 'No puede enviar un mensaje en nombre de otro usuario'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'No puede enviar un mensaje en nombre de otro usuario'}, status=status.HTTP_403_FORBIDDEN)
 
 
 
@@ -60,7 +60,7 @@ def message_detail_api_view(request, id):
                 serializer = MessageSerializer(message)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response({'message':"No puede obtener mensajes en los que no esté involucrado"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message':"No puede obtener mensajes en los que no esté involucrado"}, status=status.HTTP_403_FORBIDDEN)
     
         
         elif request.method == 'DELETE':
@@ -70,7 +70,7 @@ def message_detail_api_view(request, id):
                 return Response({'message':"Mensaje eliminado correctamente!"}, status=status.HTTP_200_OK)
 
             else:
-                return Response({'message':"No puede borrar un mensaje que no haya enviado"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message':"No puede borrar un mensaje que no haya enviado"}, status=status.HTTP_403_FORBIDDEN)
     
     return Response({'message':"No se ha encontrado un mensaje con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -105,7 +105,7 @@ def message_user_api_view(request, id_user):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             
             else:
-                return Response({'message':"No puede ver los mensajes de otros usuarios"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message':"No puede ver los mensajes de otros usuarios"}, status=status.HTTP_403_FORBIDDEN)
 
         
     return Response({'message':"El usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)
@@ -138,7 +138,7 @@ def message_user_conversation_api_view(request, id_user1, id_user2):
                 serializer = MessageSerializer(res, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             
-            return Response({'message':"No puede obtener una conversación en la que no es participe"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message':"No puede obtener una conversación en la que no es participe"}, status=status.HTTP_403_FORBIDDEN)
 
         
     return Response({'message':"Alguno de los usuarios no existe"}, status=status.HTTP_400_BAD_REQUEST)
