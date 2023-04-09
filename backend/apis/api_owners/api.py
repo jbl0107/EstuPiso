@@ -3,36 +3,39 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from apis.permissions_decorators import IsOwnerOrAdmin
+from apis.permissions_decorators import IsOwnerOrAdmin, IsAdmin
+from rest_framework.exceptions import PermissionDenied
+
 
 from apis.models import Owner, Property
 from .serializers import OwnerSerializer
 from apis.api_properties.serializers import PropertySerializer
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
 def owner_api_view(request):
+
+    def check_permissions(request):
+
+        if request.method == 'GET':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
 
     if request.method == 'GET':
 
-        if request.user.isAdministrator:
         #queryset
-            owners = Owner.objects.all()
-            serializer = OwnerSerializer(owners, many=True)
-            return Response(serializer.data, status = status.HTTP_200_OK)
-        
-        else:
-            return Response({'message':"Usted no es administrador"}, status=status.HTTP_403_FORBIDDEN)
+        owners = Owner.objects.all()
+        serializer = OwnerSerializer(owners, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
   
 
-
-
-@api_view(['POST'])
-def owner_post_api_view(request):
-
-    if request.method == 'POST':
+    elif request.method == 'POST':
         data = request.data
         serializer = OwnerSerializer(data = data) 
         if serializer.is_valid():

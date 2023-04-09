@@ -6,10 +6,26 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from apis.models import InterestServiceProperty, Property
 from .serializers import InterestServicePropertySerializer
+from rest_framework.exceptions import PermissionDenied
+from apis.permissions_decorators import IsOwnerOrAdmin, IsAdmin
 
 
-@api_view(['GET'])
+
+
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
 def interestServiceProperty_api_view(request):
+
+    def check_permissions(request):
+        
+        if request.method == 'POST':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
 
     if request.method == 'GET':
 
@@ -17,48 +33,43 @@ def interestServiceProperty_api_view(request):
         serializer = InterestServicePropertySerializer(interestServicesProperty, many=True)
         return Response(serializer.data, status = status.HTTP_200_OK)
     
-
-
-
-
-@api_view(['POST'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-def interestServiceProperty_post_api_view(request):
-
     if request.method == 'POST':
 
-        if not request.user.isAdministrator:
-            return Response({"message":"Debe ser administrador para crear un servicio de interés de un inmueble"}, status=status.HTTP_400_BAD_REQUEST)
-        
         data = request.data
         serializer = InterestServicePropertySerializer(data = data) 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 
-@api_view(['GET'])
-def interestServiceProperty_get_detail_api_view(request, id):
- 
-    interestServiceProperty = InterestServiceProperty.objects.filter(id=id).first()
-
-    if interestServiceProperty:
         
-        if request.method == 'GET':
-            serializer = InterestServicePropertySerializer(interestServiceProperty)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+       
         
-    return Response({'message':"No se ha encontrado un servicio de interés de una propiedad con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-@api_view(['PUT', 'DELETE'])
+# get sin restriccion
+@api_view(['GET', 'PUT', 'DELETE'])
 @authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
 def interestServiceProperty_detail_api_view(request, id):
+
+    def check_permissions(request):
+        
+        if request.method == 'PUT':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+        elif request.method == 'DELETE':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+        
+    check_permissions(request)
+
         
     # queryset
     interestServiceProperty = InterestServiceProperty.objects.filter(id=id).first()
@@ -66,11 +77,11 @@ def interestServiceProperty_detail_api_view(request, id):
     # validacion
     if interestServiceProperty:
         
-        if not request.user.isAdministrator:
-            return Response({"message":"Debe ser administrador para poder realizar esta operación"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
-        if request.method == 'PUT':
+        if request.method == 'GET':
+            serializer = InterestServicePropertySerializer(interestServiceProperty)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        elif request.method == 'PUT':
             data = request.data
             serializer = InterestServicePropertySerializer(interestServiceProperty, data = data)
             if serializer.is_valid():
@@ -97,13 +108,7 @@ def interestServiceProperty_property_api_view(request, id):
     if property:
         
         if request.method == 'GET':
-            all_interestServicesProperty = InterestServiceProperty.objects.all()
-            res=[]
-
-            for isp in all_interestServicesProperty:
-                if isp.property == property:
-                    res.append(isp)
-
+            res = InterestServiceProperty.objects.filter(property=property)
             serializer = InterestServicePropertySerializer(res, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         

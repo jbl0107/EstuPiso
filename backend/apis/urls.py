@@ -6,12 +6,12 @@ from apis.api_students.api import (
     student_api_view, student_detail_api_view, student_valoration_done_to_properties_api_view)
 
 from apis.api_owners.api import (
-    owner_api_view, owner_detail_api_view, owner_properties_api_view, owner_post_api_view)
+    owner_api_view, owner_detail_api_view, owner_properties_api_view)
 
 from apis.api_rules.api import rule_api_view, rule_detail_api_view
 
 from apis.api_photos.api import (
-    photo_api_view, photo_detail_api_view, photo_post_api_view, photo_delete_detail_api_view)
+    photo_api_view, photo_detail_api_view)
 
 from apis.api_services.api import service_api_view, service_detail_api_view
 
@@ -26,21 +26,18 @@ from apis.api_valoration.api import (
     valoration_user_api_view, valoration_user_detail_api_view, valoration_property_api_view, valoration_property_detail_api_view)
 
 from apis.api_groupReservations.api import (
-    groupReservation_api_view, groupReservation_detail_api_view, groupReservation_student_api_view, 
-    groupReservation_post_api_view)
+    groupReservation_api_view, groupReservation_detail_api_view, groupReservation_student_api_view)
 
 from apis.api_experiences.api import experience_api_view, experience_detail_api_view, experience_student_api_view
 
 from apis.api_interestServices.api import (
-    interestService_api_view, interestService_detail_api_view, interestService_post_api_view, 
-    interestService_get_detail_api_view)
+    interestService_api_view, interestService_detail_api_view)
 
 from apis.api_interestServicesProperty.api import (
-    interestServiceProperty_api_view, interestServiceProperty_detail_api_view, interestServiceProperty_property_api_view, 
-    interestServiceProperty_post_api_view, interestServiceProperty_get_detail_api_view)
+    interestServiceProperty_api_view, interestServiceProperty_detail_api_view, interestServiceProperty_property_api_view)
 
-from apis.api_studentAnnouncements.api import (studentAnnouncement_api_view, studentAnnouncement_detail_api_view, 
-                                               studentAnnouncement_student_api_view)
+from apis.api_studentAnnouncements.api import (
+    studentAnnouncement_api_view, studentAnnouncement_detail_api_view, studentAnnouncement_student_api_view)
 
 
 from rest_framework_simplejwt.views import (
@@ -66,7 +63,6 @@ urlpatterns = [
     path('students/<int:id>/valorations/done/properties/', student_valoration_done_to_properties_api_view, name='student_valorations_done_to_properties_api'),
 
     path('owners/', owner_api_view, name='owner_api'),
-    path('owners/new/', owner_post_api_view, name='owner_post_api'),
     path('owners/<int:id>', owner_detail_api_view, name='owner_detail_api'),
     path('owners/<int:id>/properties', owner_properties_api_view, name='owner_properties_api'),
 
@@ -74,9 +70,7 @@ urlpatterns = [
     path('rules/<int:id>', rule_detail_api_view, name='rule_detail_api'),
 
     path('photos/', photo_api_view, name='photo_api'),
-    path('photos/new/', photo_post_api_view, name='photo_post_api'),
-    path('photos/details/<int:id>', photo_detail_api_view, name='photo_detail_api'), 
-    path('photos/<int:id>', photo_delete_detail_api_view, name='photo_delete_api'),  
+    path('photos/<int:id>', photo_detail_api_view, name='photo_detail_api'), 
 
     path('services/', service_api_view, name='service_api'),
     path('services/<int:id>', service_detail_api_view, name='service_detail_api'),    
@@ -99,7 +93,6 @@ urlpatterns = [
     path('valorations/properties/<int:id>', valoration_property_detail_api_view, name='valoration_property_detail_api'),  
 
     path('groupReservations/', groupReservation_api_view, name='groupReservation_api'),
-    path('groupReservations/new', groupReservation_post_api_view, name='groupReservation_api'),
     path('groupReservations/<int:id>', groupReservation_detail_api_view, name='groupReservation_detail_api'),
     path('groupReservations/student/<int:id>', groupReservation_student_api_view, name='groupReservation_student_api'),
 
@@ -108,13 +101,9 @@ urlpatterns = [
     path('experiences/student/<int:id>', experience_student_api_view, name='experience_student_api'),
 
     path('interestServices/', interestService_api_view, name='interestService_api'),
-    path('interestServices/new/', interestService_post_api_view, name='interestService_post_api'),
-    path('interestServices/details/<int:id>', interestService_get_detail_api_view, name='interestService_get_detail_api'),
     path('interestServices/<int:id>', interestService_detail_api_view, name='interestService_detail_api'),
 
     path('interestServicesProperty/', interestServiceProperty_api_view, name='interestServiceProperty_api'),
-    path('interestServicesProperty/new/', interestServiceProperty_post_api_view, name='interestServiceProperty_post_api'),
-    path('interestServicesProperty/details/<int:id>', interestServiceProperty_get_detail_api_view, name='interestServiceProperty_get_detail_api'),
     path('interestServicesProperty/<int:id>', interestServiceProperty_detail_api_view, name='interestServiceProperty_detail_api'),
     path('interestServicesProperty/property/<int:id>', interestServiceProperty_property_api_view, name='interestServicesProperty_property_api'),
 

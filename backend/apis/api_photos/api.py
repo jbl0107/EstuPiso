@@ -4,13 +4,27 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from apis.permissions_decorators import IsOwnerOrAdmin, IsOwner
+from rest_framework.exceptions import PermissionDenied
+
 
 from apis.models import Photo
 from .serializers import PhotoSerializer
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
 def photo_api_view(request):
+
+    def check_permissions(request):
+
+        if request.method == 'POST':
+            for permission_class in [IsAuthenticated, IsOwner]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
 
     if request.method == 'GET':
 
@@ -19,13 +33,6 @@ def photo_api_view(request):
         serializer = PhotoSerializer(photos, many=True)
         return Response(serializer.data, status = status.HTTP_200_OK)
     
-    
-
-
-@api_view(['POST'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated, IsOwner])
-def photo_post_api_view(request):
 
     if request.method == 'POST': 
         data = request.data
@@ -35,46 +42,47 @@ def photo_post_api_view(request):
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 
 
 
-
-@api_view(['GET'])
+@api_view(['GET', 'DELETE'])
+@authentication_classes([JWTAuthentication])
 def photo_detail_api_view(request, id):
+
+    def check_permissions(request):
+        
+        if request.method == 'DELETE':
+            for permission_class in [IsAuthenticated, IsOwnerOrAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
         
     # queryset
     photo = Photo.objects.filter(id=id).first()
 
     # validacion
-    if photo and request.method == 'GET':
-        
-        serializer = PhotoSerializer(photo)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        
+    if photo:
+
+        if request.method == 'GET':
+            serializer = PhotoSerializer(photo)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
 
+        elif request.method == 'DELETE':
+
+            if photo.owner.id == request.user.id or request.user.isAdministrator:
         
-    return Response({'message':"No se ha encontrado una foto con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-@api_view(['DELETE'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated, IsOwnerOrAdmin])
-def photo_delete_detail_api_view(request, id):
-
-    photo = Photo.objects.filter(id=id).first()
-    
-    if photo and request.method == 'DELETE':
- 
-        if photo.owner.id == request.user.id or request.user.isAdministrator:
-        
-            photo.delete()
-            return Response({'message':"Foto eliminada correctamente!"}, status=status.HTTP_200_OK)
+                photo.delete()
+                return Response({'message':"Foto eliminada correctamente!"}, status=status.HTTP_200_OK)
             
-        else:
-            return Response({'message':"No puede borrar una foto de otro propietario"}, status=status.HTTP_403_FORBIDDEN)
-            
+            else:
+                return Response({'message':"No puede borrar una foto de otro propietario"}, status=status.HTTP_403_FORBIDDEN)
         
+
         
     return Response({'message':"No se ha encontrado una foto con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
