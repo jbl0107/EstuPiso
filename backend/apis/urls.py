@@ -41,7 +41,6 @@ urlpatterns = [
     path('owners/new/', owner_post_api_view, name='owner_post_api'),
     path('owners/<int:id>', owner_detail_api_view, name='owner_detail_api'),
     path('owners/<int:id>/properties', owner_properties_api_view, name='owner_properties_api'),
-    
 
     path('rules/', rule_api_view, name='rule_api'),
     path('rules/<int:id>', rule_detail_api_view, name='rule_detail_api'),
