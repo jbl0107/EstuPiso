@@ -107,6 +107,7 @@ class Rule(models.Model):
 
 class Photo(models.Model):
     photo = models.ImageField(upload_to='properties/', null=False, blank=False)
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=False, blank=False, related_name="photos_for_properties")
 
     
 
