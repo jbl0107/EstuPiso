@@ -19,6 +19,13 @@ class IsOwner(BasePermission):
         return request.user.is_authenticated and Owner.objects.filter(id=request.user.id).exists()
     
 
+
+class IsStudent(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and Student.objects.filter(id=request.user.id).exists()
+
+
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user.isAdministrator and request.user.is_authenticated
+    
