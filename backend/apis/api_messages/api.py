@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import PermissionDenied
+from apis.permissions_decorators import IsAdmin
 
 
 from apis.models import Message, User
@@ -13,11 +15,26 @@ from .serializers import MessageSerializer
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def message_api_view(request):
+    
+    def check_permissions(request):
+
+        if request.method == 'GET':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+        if request.method == 'POST':
+            for permission_class in [IsAuthenticated]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
+
 
     if request.method == 'GET':
-        
-        if not request.user.isAdministrator:
-            return Response({'message': 'No puede obtener los mensajes del resto de usuarios registrados'}, status=status.HTTP_403_FORBIDDEN) 
 
         #queryset
         messages = Message.objects.all()
@@ -28,17 +45,14 @@ def message_api_view(request):
     elif request.method == 'POST':
 
         data = request.data
-        if request.user.id == int(data.get('userSender')) or request.user.isAdministrator:
+        data['userSender'] = request.user.id
 
-            serializer = MessageSerializer(data = data) 
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status = status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        else:
-            return Response({'message': 'No puede enviar un mensaje en nombre de otro usuario'}, status=status.HTTP_403_FORBIDDEN)
-
+        serializer = MessageSerializer(data = data) 
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 
