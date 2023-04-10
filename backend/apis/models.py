@@ -61,7 +61,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['email', 'name', 'surname', 'dni', 'telephone', 'photo']
 
     def __str__(self):
-        return f'{self.name}, {self.surname}'
+        return f'{self.name} {self.surname}, con username: {self.username}'
     
     def has_perm(self, perm, obj = None):
         return True
@@ -109,6 +109,8 @@ class Photo(models.Model):
     photo = models.ImageField(upload_to='properties/', null=False, blank=False)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=False, blank=False, related_name="photos_for_properties")
 
+    def __str__(self):
+        return self.photo
     
 
 
@@ -141,7 +143,7 @@ class Property(models.Model):
         verbose_name_plural = "Properties"
     
     def __str__(self):
-        return f'{self.title}. Owner: {self.owner}'
+        return f'{self.title}. (Owner: {self.owner})'
     
 
     
@@ -168,7 +170,7 @@ class UserValoration(models.Model):
     valued = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='evaluationsReceived')
 
     def __str__(self):
-        return self.value
+        return f'{self.title}. Puntuación: {str(self.value)}'
 
 
 
@@ -181,7 +183,7 @@ class PropertyValoration(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, null=False, related_name='propertyRatings')
 
     def __str__(self):
-        return self.value
+        return f'{self.title}. Puntuación: {str(self.value)}'
     
 
 
@@ -196,6 +198,8 @@ class GroupReservation(models.Model):
     student = models.ForeignKey(Student, null=False, on_delete=models.CASCADE, related_name="groupReservationStudent")
     admin = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING, related_name="groupReservationAssigned") 
 
+    def __str__(self):
+        return self.student.username
 
 
 class Experience(models.Model):
@@ -237,7 +241,7 @@ class InterestService(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return f'{self.name}. Type: {self.type}'
 
 
 class InterestServiceProperty(models.Model):
@@ -251,6 +255,8 @@ class InterestServiceProperty(models.Model):
     class Meta:
         unique_together = ('distance', 'busTime', 'carTime', 'walkTime', 'interestService', 'property')
 
+    def __str__(self):
+        return f'Property: {self.property}. Servicio de interés: {self.interestService}'
 
 
 class CleaningFrecuency(models.TextChoices):
@@ -269,7 +275,7 @@ class Gender(models.TextChoices):
 
 class StudentAnnouncement(models.Model):
     description = models.TextField(null=False, blank=False)
-    photo = models.ImageField(upload_to='studentsAnnouncement/', null=True)
+    photo = models.ImageField(upload_to='studentsAnnouncement/', null=True, blank=True)
     age = models.IntegerField(null=False)
     pet = models.BooleanField(null=False)
     smoker = models.BooleanField(null=False)
@@ -281,3 +287,6 @@ class StudentAnnouncement(models.Model):
     gender = models.CharField(max_length=11 ,choices=Gender.choices, default="-", null=False)
     wantedGender = models.CharField(max_length=11 ,choices=Gender.choices, default="-", null=False)
     student = models.OneToOneField(Student, on_delete=models.CASCADE, null=False)
+
+    def __str__(self):
+        return f'Student: {self.student}'
