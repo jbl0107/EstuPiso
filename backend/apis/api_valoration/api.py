@@ -4,8 +4,6 @@ from rest_framework import status
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from apis.permissions_decorators import IsStudentOrAdmin, IsAdmin
-from rest_framework.exceptions import PermissionDenied
 
 from apis.models import UserValoration, PropertyValoration, Owner
 from .serializers import UserValorationSerializer, PropertyValorationSerializer

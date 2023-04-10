@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apis.models import *
+from apis.models import GroupReservation
 
 
 class GroupReservationSerializer(serializers.ModelSerializer):

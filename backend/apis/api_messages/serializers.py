@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apis.models import *
+from apis.models import Message
 
 
 class MessageSerializer(serializers.ModelSerializer):
