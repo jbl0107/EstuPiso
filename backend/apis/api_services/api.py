@@ -1,14 +1,29 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework import status
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from apis.permissions_decorators import IsAdmin
+from rest_framework.exceptions import PermissionDenied
 
 from apis.models import Service
 from .serializers import ServiceSerializer
 
 
 @api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
 def service_api_view(request):
+
+    def check_permissions(request):
+        if request.method == 'POST':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
 
     if request.method == 'GET':
 
@@ -30,7 +45,24 @@ def service_api_view(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@authentication_classes([JWTAuthentication])
 def service_detail_api_view(request, id):
+
+    def check_permissions(request):
+        if request.method == 'PUT':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+        elif request.method == 'DELETE':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
         
     # queryset
     service = Service.objects.filter(id=id).first()

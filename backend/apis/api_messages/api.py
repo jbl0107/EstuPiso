@@ -1,6 +1,10 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import PermissionDenied
+from apis.permissions_decorators import IsAdmin
 
 
 from apis.models import Message, User
@@ -8,7 +12,27 @@ from .serializers import MessageSerializer
 
 
 @api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def message_api_view(request):
+    
+    def check_permissions(request):
+
+        if request.method == 'GET':
+            for permission_class in [IsAuthenticated, IsAdmin]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+        if request.method == 'POST':
+            for permission_class in [IsAuthenticated]:
+                permission = permission_class()
+                if not permission.has_permission(request, None):
+                    raise PermissionDenied(getattr(permission, 'message', None))
+                
+    
+    check_permissions(request)
+
 
     if request.method == 'GET':
 
@@ -19,17 +43,23 @@ def message_api_view(request):
     
     #create
     elif request.method == 'POST':
+
         data = request.data
+        data['userSender'] = request.user.id
+
         serializer = MessageSerializer(data = data) 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 
 
 @api_view(['GET', 'DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def message_detail_api_view(request, id):
         
     # queryset
@@ -38,21 +68,32 @@ def message_detail_api_view(request, id):
     # validacion
     if message:
         
+
         if request.method == 'GET':
-            serializer = MessageSerializer(message)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
+            if (request.user.id == message.userSender.id or request.user.id == message.userRecipient.id) or request.user.isAdministrator:
+                serializer = MessageSerializer(message)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'message':"No puede obtener mensajes en los que no esté involucrado"}, status=status.HTTP_403_FORBIDDEN)
+    
         
         elif request.method == 'DELETE':
-            message.delete()
-            return Response({'message':"Mensaje eliminado correctamente!"}, status=status.HTTP_200_OK)
-        
+            if request.user.id == message.userSender.id or request.user.isAdministrator:
+            
+                message.delete()
+                return Response({'message':"Mensaje eliminado correctamente!"}, status=status.HTTP_200_OK)
+
+            else:
+                return Response({'message':"No puede borrar un mensaje que no haya enviado"}, status=status.HTTP_403_FORBIDDEN)
+    
     return Response({'message':"No se ha encontrado un mensaje con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def message_user_api_view(request, id_user):
         
     # queryset
@@ -63,15 +104,22 @@ def message_user_api_view(request, id_user):
     if user:
         
         if request.method == 'GET':
-            messages = Message.objects.all()
-            res = []
 
-            for m in messages:
-                if m.userSender == user or m.userRecipient == user:
-                    res.append(m)
+            if request.user.id == id_user or request.user.isAdministrator:
 
-            serializer = MessageSerializer(res, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+                messages = Message.objects.all()
+                res = []
+
+                for m in messages:
+                    if m.userSender == user or m.userRecipient == user:
+                        res.append(m)
+
+
+                serializer = MessageSerializer(res, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            else:
+                return Response({'message':"No puede ver los mensajes de otros usuarios"}, status=status.HTTP_403_FORBIDDEN)
 
         
     return Response({'message':"El usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)
@@ -79,6 +127,8 @@ def message_user_api_view(request, id_user):
 
 
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def message_user_conversation_api_view(request, id_user1, id_user2):
         
     # queryset
@@ -90,15 +140,19 @@ def message_user_conversation_api_view(request, id_user1, id_user2):
     if user1 and user2:
         
         if request.method == 'GET':
-            messages = Message.objects.all()
-            res = []
 
-            for m in messages:
-                if (m.userSender == user1 and m.userRecipient == user2) or (m.userSender == user2 and m.userRecipient == user1):
-                    res.append(m)
+            if (request.user.id == id_user1 or request.user.id == id_user2) or request.user.isAdministrator:
+                messages = Message.objects.all()
+                res = []
+
+                for m in messages:
+                    if (m.userSender == user1 and m.userRecipient == user2) or (m.userSender == user2 and m.userRecipient == user1):
+                        res.append(m)
+                
+                serializer = MessageSerializer(res, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             
-            serializer = MessageSerializer(res, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({'message':"No puede obtener una conversación en la que no es participe"}, status=status.HTTP_403_FORBIDDEN)
 
         
-    return Response({'message':"Alguno/s de los usuarios no existen"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"Alguno de los usuarios no existe"}, status=status.HTTP_400_BAD_REQUEST)
