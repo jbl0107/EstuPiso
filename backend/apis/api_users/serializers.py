@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         if value:
             if len(value) < 8:
-                raise serializers.ValidationError('Password must be at least 8 characters')
+                raise serializers.ValidationError('La contraseña debe tener al menos 8 caracteres')
             
             return value
         
