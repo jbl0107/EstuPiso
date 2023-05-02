@@ -50,7 +50,7 @@ from .views import LogoutView
 urlpatterns = [
 
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'), #devuelve token de acceso y token de refresco
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('logout/', LogoutView.as_view(), name='token_logout'),
 
     path('users/', user_api_view, name='user_api'),
