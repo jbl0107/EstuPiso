@@ -20,9 +20,7 @@ api.interceptors.response.use(
         try {
           const response = await api.post('/token/refresh/', { refreshToken });
           const token = response.data.access;
-          console.log('api token: ', token);
           const refreshToken = response.data.refresh;
-          console.log('api refresh: ', refreshToken);
 
           localStorage.setItem('jwtToken', token);
           localStorage.setItem('refreshToken', refreshToken)
@@ -35,11 +33,11 @@ api.interceptors.response.use(
 
           return api(originalRequest);
         } catch (error) {
-          history.push('/login');
+          //history.push('/login');
           
         }
       } else {
-        history.push('/login');
+        //history.push('/login');
       }
     }
 

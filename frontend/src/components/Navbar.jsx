@@ -3,11 +3,32 @@ import { Link, useLocation } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import api from '../api/api.js'
-
+import { DropdownMenu } from "./DropDown.jsx";
 
 
 export function Navbar() {
+
+
+  const [userInfo, setUserInfo] = useState(null);
+
+
+  const getUserInfo = async (userId, token) => {
+    const response = await fetch(`/api/users/${userId}`, {
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+  });    
+    const data = await response.json();
+    setUserInfo(data);
+    console.log(userInfo);
+
+    
+  }
+
+
   const location = useLocation();
+  
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,6 +47,9 @@ export function Navbar() {
 
     if (accessToken && refreshToken) {
       const decodedToken = jwtDecode(accessToken);
+
+      const userId = decodedToken.user_id;
+      getUserInfo(userId, accessToken);
   
       const currentTime = Date.now() / 1000;
       
@@ -133,7 +157,7 @@ export function Navbar() {
           <div className="text-sm lg:flex-grow flex space-x-8">
             <Link
               to="/"
-              className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 text-sm font-medium mr-4"
+              className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 text-sm font-medium mr-4
               ${
                 location.pathname === '/' ? 'bg-gray-700' : ''
               }`}>
@@ -143,7 +167,7 @@ export function Navbar() {
 
             <Link
               to="/announcements"
-              className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 text-sm font-medium mr-4"
+              className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 text-sm font-medium mr-4
               ${
                 location.pathname === '/announcements' ? 'bg-gray-700' : ''
               }`}>
@@ -151,27 +175,42 @@ export function Navbar() {
             </Link>
 
           </div>
-          
+
+
+
             {isLoggedIn ? (
-              <Link
+              <div className="ml-5">
+              <DropdownMenu userInfo={userInfo}>
+                <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
+                  <img src="./src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>
+                </span>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-800 
+                rounded-t-md pl-10">Mi perfil</a>
+
+
+
+                <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
+                  <img src="./src/assets/logout.svg" alt="Lock icon" className="w-6 h-5"/>
+                </span>
+                <Link
                 to="/"
                 onClick={handleLogout}
-                className={`inline-block text-sm font-medium px-4 py-2 leading-none border rounded text-black
-                border-black hover:border-transparent hover:text-teal-700 hover:bg-white mt-4 lg:mt-0 border-width: 5px"
+                className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-800 pl-10
+                rounded-b-md
                 ${
                   location.pathname === '/' ? '' : ''
                 }`}>
                   Cerrar sesión
               </Link>
-
-
-
+              </DropdownMenu>
+            </div>
+              
             ):(
 
               <Link
                 to="/loginForm"
                 className={`inline-block text-sm font-medium px-4 py-2 leading-none border rounded text-black
-                border-black hover:border-transparent hover:text-teal-700 hover:bg-white mt-4 lg:mt-0 border-width: 5px"
+                border-black hover:border-transparent hover:text-teal-700 hover:bg-white mt-4 lg:mt-0 border-width: 5px
                 ${
                   location.pathname === '/loginForm' ? 'bg-black text-teal-700' : ''
                 }`}>
@@ -179,6 +218,13 @@ export function Navbar() {
             </Link>
 
             )}
+
+
+
+
+
+
+
             
         </div>
       </nav>
