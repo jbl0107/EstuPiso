@@ -3,9 +3,12 @@ import axios from 'axios'
 import {Link} from 'react-router-dom'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import { PhoneInput } from './PhoneInput'
+import { useNavigate } from 'react-router-dom';
+import api from '../api/api.js';
 
 
 export const RegisterForm = () => {
+    const navigate = useNavigate();
 
     const fileInputRef = useRef();
     const [fileName, setFileName] = useState('');
@@ -56,6 +59,7 @@ export const RegisterForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         
         const formData = new FormData();
         if (event.target.photo.files[0]) {
@@ -92,12 +96,21 @@ export const RegisterForm = () => {
             else if(event.target.type.value == "Propietario"){
                 response = await axios.post('/api/owners/', formData);
             }
+
             else{
                 setTypeError('Eliga un tipo de usuario')
             }
 
+            const loginResponse = await api.post('/api/login/', {
+                username: event.target.username.value,
+                password: event.target.password.value,
+              });
+              
+              localStorage.setItem('jwtToken', loginResponse.data.access);
+              localStorage.setItem('refreshToken', loginResponse.data.refresh);
+              navigate('/');
 
-
+            
 
         } catch (error) {
 
