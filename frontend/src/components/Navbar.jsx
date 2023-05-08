@@ -20,7 +20,6 @@ export function Navbar() {
   });    
     const data = await response.json();
     setUserInfo(data);
-    console.log(userInfo);
 
     
   }
@@ -147,7 +146,7 @@ export function Navbar() {
 
   return (
     
-      <nav className="flex items-center justify-between flex-wrap bg-gradient-to-r from-blue-900 to-blue-300 p-6 w-full fixed top-0 left-0">
+      <nav className="flex items-center justify-between flex-wrap bg-gradient-to-r from-blue-700 to-blue-300 p-6 w-full fixed top-0 left-0">
         <div className="flex items-center flex-shrink-0 text-white mr-6">
           <Link to="/"><img className="md:h-full md:w-52" src="/Logo.png"/></Link>
       
@@ -176,10 +175,21 @@ export function Navbar() {
 
           </div>
 
+          
+            {isLoggedIn ? (
+              <div className="mr-8 mb-10">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
+                    <img src="./src/assets/bell.svg" alt="Lock icon" className="w-6 h-6"/>
+                </span>
+              </div>
 
+            ):(
+              <></>
+            )}
 
             {isLoggedIn ? (
               <div className="ml-5">
+
               <DropdownMenu userInfo={userInfo}>
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
                   <img src="./src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>
@@ -207,6 +217,7 @@ export function Navbar() {
               
             ):(
 
+              
               <Link
                 to="/loginForm"
                 className={`inline-block text-sm font-medium px-4 py-2 leading-none border rounded text-black
