@@ -8,7 +8,7 @@ from rest_framework.exceptions import PermissionDenied
 
 
 from apis.models import Owner, Property
-from .serializers import OwnerSerializer
+from .serializers import OwnerSerializer, OwnerPublicSerializer
 from apis.api_properties.serializers import PropertySerializer
 
 
@@ -115,3 +115,21 @@ def owner_properties_api_view(request, id):
         
     return Response({'message': 'No se ha encontrado un propietario con estos datos'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+@api_view(['GET'])
+def owner_public_detail_api_view(request, id):
+        
+    # queryset
+    owner = Owner.objects.filter(id=id).first()
+
+    # validacion
+    if owner:
+
+        if request.method == 'GET':
+            serializer = OwnerPublicSerializer(owner)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)

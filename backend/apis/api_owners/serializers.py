@@ -46,3 +46,10 @@ class OwnerSerializer(serializers.ModelSerializer):
         updated_owner.save()
         return updated_owner
 
+
+
+
+class OwnerPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Owner
+        fields = ['username', 'photo', 'name']
