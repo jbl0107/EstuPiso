@@ -1,6 +1,7 @@
 from django.urls import path
 from apis.api_users.api import (
-    user_api_view, user_detail_api_view, user_valoration_received_api_view, user_valoration_done_to_users_api_view)
+    user_api_view, user_detail_api_view, user_valoration_received_api_view, user_valoration_done_to_users_api_view,
+    get_user_type)
 
 from apis.api_students.api import (
     student_api_view, student_detail_api_view, student_valoration_done_to_properties_api_view)
@@ -57,7 +58,8 @@ urlpatterns = [
     path('users/<int:id>', user_detail_api_view, name='user_detail_api'),
     path('users/<int:id>/valorations/received', user_valoration_received_api_view, name='user_valorations_received_api'),
     path('users/<int:id>/valorations/done/users', user_valoration_done_to_users_api_view, name='user_valorations_done_to_users_api'),
-    
+    path('users/<int:id>/type', get_user_type, name='user_type_api'),
+
     path('students/', student_api_view, name='student_api'),
     path('students/<int:id>', student_detail_api_view, name='student_detail_api'),
     path('students/<int:id>/valorations/done/properties/', student_valoration_done_to_properties_api_view, name='student_valorations_done_to_properties_api'),

@@ -7,7 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apis.permissions_decorators import IsAdmin
 from rest_framework.exceptions import PermissionDenied
 
-from apis.models import User, UserValoration
+from apis.models import User, UserValoration, Student, Owner
 from .serializers import UserSerializer
 from apis.api_valoration.serializers import UserValorationSerializer
 
@@ -183,3 +183,19 @@ def user_valoration_done_to_users_api_view(request, id):
     
 
     return Response({'message': "No se ha encontrado un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+
+
+
+@api_view(['GET'])
+def get_user_type(request, id):
+
+    if Student.objects.filter(id=id).exists():
+        user_type = 'student'
+    
+    elif Owner.objects.filter(id=id).exists():
+        user_type = 'owner'
+    
+    else:
+        user_type = None
+    
+    return Response({'userType': user_type}, status=status.HTTP_200_OK)
