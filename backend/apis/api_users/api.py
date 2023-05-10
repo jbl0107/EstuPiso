@@ -189,12 +189,19 @@ def user_valoration_done_to_users_api_view(request, id):
 @api_view(['GET'])
 def get_user_type(request, id):
 
+    bool = User.objects.filter(id=id).exists()
+
     if Student.objects.filter(id=id).exists():
         user_type = 'student'
     
     elif Owner.objects.filter(id=id).exists():
         user_type = 'owner'
     
+    elif bool:
+        user = User.objects.filter(id=id).first()
+        if user.isAdministrator:
+            user_type = 'admin'
+
     else:
         user_type = None
     

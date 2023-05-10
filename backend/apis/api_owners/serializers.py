@@ -52,4 +52,10 @@ class OwnerSerializer(serializers.ModelSerializer):
 class OwnerPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
-        fields = ['username', 'photo', 'name']
+        fields = ['username']
+
+
+class OwnerStudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Owner
+        fields = ['username', 'photo', 'name', 'telephone']

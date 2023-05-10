@@ -7,7 +7,7 @@ from apis.api_students.api import (
     student_api_view, student_detail_api_view, student_valoration_done_to_properties_api_view)
 
 from apis.api_owners.api import (
-    owner_api_view, owner_detail_api_view, owner_properties_api_view, owner_public_detail_api_view)
+    owner_api_view, owner_detail_api_view, owner_properties_api_view, owner_public_detail_api_view, owner_student_detail_api_view)
 
 from apis.api_rules.api import rule_api_view, rule_detail_api_view
 
@@ -68,6 +68,7 @@ urlpatterns = [
     path('owners/<int:id>', owner_detail_api_view, name='owner_detail_api'),
     path('owners/<int:id>/properties', owner_properties_api_view, name='owner_properties_api'),
     path('owners/<int:id>/public', owner_public_detail_api_view, name='owner_public_detail_api'),
+    path('owners/<int:id>/student', owner_student_detail_api_view, name='owner_student_detail_api'),
 
     path('rules/', rule_api_view, name='rule_api'),
     path('rules/<int:id>', rule_detail_api_view, name='rule_detail_api'),
