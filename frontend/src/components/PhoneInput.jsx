@@ -21,7 +21,7 @@ export function PhoneInput({onPrefixChange, error}) {
 
       <div className='relative'>
         <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2 ml-16">
-          <img src="./src/assets/phone.svg" alt="Mail icon" className="w-6 h-6"/>
+          <img src="/src/assets/phone.svg" alt="Mail icon" className="w-6 h-6"/>
         </span>
         
         <div className='flex'>

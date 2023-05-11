@@ -266,7 +266,7 @@ export const RegisterForm = () => {
                         
                         <div className='relative'>
                             <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
-                                <img src="./src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>
+                                <img src="/src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>
                             </span>
 
                             <input className="shadow appearance-none border rounded w-full py-2 px-3 pl-10
@@ -286,7 +286,7 @@ export const RegisterForm = () => {
                         
                         <div className='relative'>
                             <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
-                                <img src="./src/assets/mail.svg" alt="Mail icon" className="w-6 h-6"/>
+                                <img src="/src/assets/mail.svg" alt="Mail icon" className="w-6 h-6"/>
                             </span>
                             
                             <input className="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 leading-tight 
@@ -327,7 +327,7 @@ export const RegisterForm = () => {
 
                         <div className='relative'>
                             <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
-                                <img src="./src/assets/lock.svg" alt="Lock icon" className="w-6 h-5"/>
+                                <img src="/src/assets/lock.svg" alt="Lock icon" className="w-6 h-5"/>
                             </span>
 
                             <input className="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 mb-3 leading-tight 
@@ -372,7 +372,7 @@ export const RegisterForm = () => {
 
                     <div>
                         <span className="inline-block align-baseline font-bold text-sm text-blue-500" to="#">
-                        ¿Ya estas registrado? <Link className="hover:text-white hover:underline" to="/loginForm">Inicie sesión aquí</Link>
+                        ¿Ya está registrado? <Link className="hover:text-white hover:underline" to="/loginForm">Inicie sesión aquí</Link>
                         </span>
                     </div>
                     
