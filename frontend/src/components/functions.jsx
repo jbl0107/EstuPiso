@@ -1,3 +1,4 @@
+// Renderiza las funcionalidades que aparecen en la pantalla de inicio (Index.jsx)
 export function Feature({ icon, text }) {
     return (
       <div className="p-4 bg-white rounded-lg shadow-md">
