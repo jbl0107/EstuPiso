@@ -7,7 +7,7 @@ from apis.permissions_decorators import IsOwnerOrAdmin, IsOwner
 
 from rest_framework.exceptions import PermissionDenied
 
-from apis.models import Property, PropertyValoration
+from apis.models import Property, PropertyValoration, PropertyType
 from .serializers import PropertySerializer
 from apis.api_rules.serializers import RuleSerializer
 from apis.api_photos.serializers import PhotoSerializer
@@ -38,6 +38,7 @@ def property_api_view(request):
     #create
     elif request.method == 'POST':
         data = request.data
+        data = request.POST.copy()
         data['owner'] = request.user.id
         serializer = PropertySerializer(data = data) 
         if serializer.is_valid():
@@ -184,3 +185,10 @@ def property_valorations_api_view(request, id):
     
 
     return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+
+
+
+@api_view(["GET"])
+def property_types(request):
+    property_types = [choice.value for choice in PropertyType]
+    return Response(property_types)

@@ -18,7 +18,7 @@ from apis.api_services.api import service_api_view, service_detail_api_view
 
 from apis.api_properties.api import (
     property_api_view, property_detail_api_view, property_rules_api_view, property_photos_api_view, 
-    property_services_api_view, property_valorations_api_view)
+    property_services_api_view, property_valorations_api_view, property_types)
 
 from apis.api_messages.api import (
     message_api_view, message_detail_api_view, message_user_api_view, message_user_conversation_api_view)
@@ -87,6 +87,9 @@ urlpatterns = [
     path('properties/<int:id>/photos', property_photos_api_view, name='property_photos_api'),
     path('properties/<int:id>/services', property_services_api_view, name='property_serviceS_api'),
     path('properties/<int:id>/valorations', property_valorations_api_view, name='property_valorations_api'),
+    path('properties/types', property_types, name='property_types'),
+    
+
 
     path('messages/', message_api_view, name='message_api'),
     path('messages/<int:id>', message_detail_api_view, name='message_detail_api'),   
