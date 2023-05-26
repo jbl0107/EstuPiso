@@ -36,3 +36,15 @@
 .ml-AnnouncementDetails{
   margin-left: 1400px;
 }
+
+
+@keyframes highlight {
+  0% {background-color: yellow;}
+  50% {background-color: yellow;}
+  100% {background-color: transparent;}
+}
+
+.animate-highlight {
+  animation: highlight 1.5s;
+}
+

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { isUserLoggedIn } from './auth';
 import { useLocation } from 'react-router-dom';
-
+import jwtDecode from 'jwt-decode';
 
 export const AuthContext = createContext();
 
@@ -88,10 +88,32 @@ export const AuthProvider = ({ children }) => {
   }
 
 
+  const[isOwner, setIsOwner] = useState(null);
+
+  useEffect(() => {
+    if(isLoggedIn){
+      const fetchUserType = async () => {
+
+        const token = localStorage.getItem('jwtToken');
+        const decoded = jwtDecode(token);
+        const userId = decoded.user_id;
+  
+        const userTypeResponse = await fetch(`/api/users/${userId}/type`);
+        const userTypeData = await userTypeResponse.json();
+  
+        if (userTypeData.userType === "owner"){
+          setIsOwner(true);
+        }
+        
+      };
+      fetchUserType();
+    }
+  
+  }, [isLoggedIn]);
 
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, handleLogout }}>
+    <AuthContext.Provider value={{ isLoggedIn, handleLogout, isOwner }}>
       {children}
     </AuthContext.Provider>
   );

@@ -13,23 +13,28 @@ export function Navbar() {
 
 
   const location = useLocation();
-  const { isLoggedIn, handleLogout } = useContext(AuthContext);
+  const { isLoggedIn, handleLogout, isOwner } = useContext(AuthContext);
 
 
   const [userInfo, setUserInfo] = useState(null);
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const token = localStorage.getItem('jwtToken');
-      const decoded = jwtDecode(token);
-      const userId = decoded.user_id;
-  
-      const data = await getUserInfo(userId, token);
-      setUserInfo(data);
-    };
-  
-    fetchUserInfo();
-  }, []);
 
+  useEffect(() => {
+
+    if(isLoggedIn){
+      const fetchUserInfo = async () => {
+
+        const token = localStorage.getItem('jwtToken');
+        const decoded = jwtDecode(token);
+        const userId = decoded.user_id;
+    
+        const data = await getUserInfo(userId, token);
+        setUserInfo(data);
+  
+      };
+      fetchUserInfo();
+    }
+    
+  }, []);
 
   
 
@@ -62,6 +67,20 @@ export function Navbar() {
               Anuncios
             </Link>
 
+            {isLoggedIn && isOwner ? (
+              <Link
+              to='/createAnnouncement' className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 
+               text-sm font-medium mr-4 ${
+                location.pathname === '/createAnnouncement' ? 'bg-gray-700' : ''
+              }`}>
+                
+              Publicar anuncio
+            </Link>
+
+            ):(
+              <></>
+            )}
+
           </div>
 
           
@@ -78,7 +97,6 @@ export function Navbar() {
 
             {isLoggedIn ? (
               <div className="ml-5">
-
               <DropdownMenu userInfo={userInfo}>
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
                   <img src="/src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>

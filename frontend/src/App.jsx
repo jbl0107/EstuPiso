@@ -5,6 +5,8 @@ import { Index } from "./components/Index";
 import {Routes, Route, useLocation } from "react-router-dom";
 import { Announcements } from './components/Announcements';
 import { AnnouncementDetails } from './components/AnnouncementDetails';
+import { CreateAnnouncement } from './components/CreateAnnouncement';
+
 import { AuthProvider } from './api/AuthContext';
 
 
@@ -27,6 +29,7 @@ export function App() {
         <Route path="/registerForm" element={<RegisterForm />} />
         <Route path="/announcements" element={<Announcements />} />
         <Route path="/announcements/:id" element={<AnnouncementDetails />} />
+        <Route path="/createAnnouncement" element={<CreateAnnouncement />} />
         
         
 

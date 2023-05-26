@@ -11,7 +11,7 @@ import { AuthContext } from '../api/AuthContext';
 export const AnnouncementDetails = () => {
 
 
-  const { isLoggedIn, handleLogout } = useContext(AuthContext);
+  const { isLoggedIn, handleLogout, isOwner } = useContext(AuthContext);
 
 
   const [property, setProperty] = useState(null);
@@ -140,35 +140,55 @@ export const AnnouncementDetails = () => {
           </div>
 
 
-        {isLoggedIn ? (
-
-              <div className="ml-96 self-center">
-                <div className="max-w-sm p-4 border rounded-lg shadow-md">
-                {ownerStudent && <p className="text-gray-700 mb-2">Datos del propietario 
-                <span className="text-red-500"> {ownerStudent.username}</span>: <br/>
-                {ownerStudent && ownerStudent.photo ? (
-                  <img className="h-12 w-12 rounded-full" src={'api/'+userInfo.photo}/>
-                ) : (
-                  <UserCircleIcon className="h-12 w-12 text-gray-700" aria-hidden="true" />
-                )}
-                Nombre:  <span className="text-red-500">{ownerStudent.name}</span><br/>
-                Número de teléfono: <span className="text-red-500">{ownerStudent.telephone}</span><br/>
-                
-                </p>}
-
-              </div>
-  
-            </div>
-
-            ):(
+          {isLoggedIn ? (
+            isOwner ? (
               <div className="ml-96 self-center">
                 {owner && <p className="text-gray-700 mb-2">Propietario: {owner.username}</p>}
-
-                <p className="text-sky-600 mb-2">¿Quieres ver más información sobre el propietario o chatear
-                 con él? <Link className='hover:underline' to='/registerForm'>Registrate como estudiante aquí</Link></p>
+                <p className="text-sky-600 mb-2">
+                  ¿Quieres ver más información sobre el propietario o chatear con él?{" "}
+                  <Link className="hover:underline" to="/registerForm">
+                    Registrate como estudiante aquí
+                  </Link>
+                </p>
               </div>
-            )}
+            ) : (
+              <div className="ml-96 self-center">
+                <div className="max-w-sm p-4 border rounded-lg shadow-md">
+                  {ownerStudent && (
+                    <p className="text-gray-700 mb-2">
+                      Datos del propietario
+                      <span className="text-red-500"> {ownerStudent.username}</span>: <br />
+                      {ownerStudent && ownerStudent.photo ? (
+                        <img className="h-12 w-12 rounded-full" src={"api/" + userInfo.photo} />
+                      ) : (
+                        <UserCircleIcon className="h-12 w-12 text-gray-700" aria-hidden="true" />
+                      )}
+                      Nombre: <span className="text-red-500">{ownerStudent.name}</span>
+                      <br />
+                      Número de teléfono:{" "}
+                      <span className="text-red-500">{ownerStudent.telephone}</span>
+                      <br />
+                    </p>
+                  )}
+                </div>
+              </div>
+            )
+          ) : (
+            <div className="ml-96 self-center">
+              {owner && <p className="text-gray-700 mb-2">Propietario: {owner.username}</p>}
+              <p className="text-sky-600 mb-2">
+                ¿Quieres ver más información sobre el propietario o chatear con él?{" "}
+                <Link className="hover:underline" to="/registerForm">
+                  Registrate como estudiante aquí
+                </Link>
+              </p>
+            </div>
+          )}
 
+        
+            
+
+            
 
       </div>
     </div>
