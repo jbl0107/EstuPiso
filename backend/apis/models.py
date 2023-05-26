@@ -130,9 +130,9 @@ class Property(models.Model):
     localization = models.CharField(max_length=100, null=False)
     price = models.IntegerField(null=False, validators=[MinValueValidator(1)])
     type = models.CharField(max_length=20 ,choices=PropertyType.choices, default="-", null=False)
-    dormitories = models.IntegerField(null=False)
-    size = models.IntegerField(null=False)
-    baths = models.IntegerField(null=False)
+    dormitories = models.IntegerField(null=False, validators=[MinValueValidator(0)])
+    size = models.IntegerField(null=False, validators=[MinValueValidator(0)])
+    baths = models.IntegerField(null=False, validators=[MinValueValidator(0)])
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=False, related_name='properties')
     rules = models.ManyToManyField(Rule, blank=True, related_name='rules')
     photos = models.ManyToManyField(Photo, blank=False)
@@ -190,7 +190,7 @@ class PropertyValoration(models.Model):
 # on_delete = cascade --> si borro un student, se borran todas sus reservas grupales.
 # admin es un user que debe tener isAdministrator = True
 class GroupReservation(models.Model):
-    size = models.IntegerField(blank=False, null=False)
+    size = models.IntegerField(blank=False, null=False, validators=[MinValueValidator(2)])
     destination = models.CharField(max_length=50 ,blank=False, null=False)
     budget = models.IntegerField(blank=False, null=False)
     email = models.EmailField(blank=False, null=False)
@@ -276,7 +276,7 @@ class Gender(models.TextChoices):
 class StudentAnnouncement(models.Model):
     description = models.TextField(null=False, blank=False)
     photo = models.ImageField(upload_to='studentsAnnouncement/', null=True, blank=True)
-    age = models.IntegerField(null=False)
+    age = models.IntegerField(null=False, validators=[MinValueValidator(0)])
     pet = models.BooleanField(null=False)
     smoker = models.BooleanField(null=False)
     flatSocialize = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], null=False)
