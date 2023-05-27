@@ -19,23 +19,24 @@ export function Navbar() {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
+    const storedUserInfo = localStorage.getItem('userInfo');
+    if (storedUserInfo) {
+      setUserInfo(JSON.parse(storedUserInfo));
 
-    if(isLoggedIn){
+    } else if (isLoggedIn) {
+
       const fetchUserInfo = async () => {
-
         const token = localStorage.getItem('jwtToken');
         const decoded = jwtDecode(token);
         const userId = decoded.user_id;
-    
+
         const data = await getUserInfo(userId, token);
         setUserInfo(data);
-  
+        localStorage.setItem('userInfo', JSON.stringify(data));
       };
       fetchUserInfo();
     }
-    
   }, []);
-
   
 
   return (
@@ -95,14 +96,17 @@ export function Navbar() {
               <></>
             )}
 
+
+
             {isLoggedIn ? (
               <div className="ml-5">
               <DropdownMenu userInfo={userInfo}>
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
                   <img src="/src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>
                 </span>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-800 
-                rounded-t-md pl-10">Mi perfil</a>
+                
+                <Link to="/userProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-800 
+                rounded-t-md pl-10">Mi perfil</Link>
 
 
 
@@ -132,6 +136,14 @@ export function Navbar() {
               Iniciar sesión
             </Link>
 
+            )}
+
+            {isLoggedIn ? (
+              <div className="flex items-center">
+                <span className="ml-3">{userInfo?.username}</span>
+              </div>
+            ) : (
+              <></>
             )}
 
 

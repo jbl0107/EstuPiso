@@ -134,8 +134,28 @@ export const AnnouncementDetails = () => {
             <p className="text-gray-700 mb-2">{property.type}</p>
             <p className="text-gray-700 mb-2">{property.price}€/mes</p>
             <p className="text-gray-700 mb-2">Tamaño: {property.size}m2</p>
-            <p className="text-gray-700 mb-2">Dormitorios: {property.dormitories}</p>
-            <p className="text-gray-700 mb-2">Baños: {property.baths}</p>
+            {property.type == 'Habitacion' ? (
+              property.baths == 1 ? (
+                <p className="text-gray-700 mb-2">Tiene baño privado</p>
+              ):(
+                <p className="text-gray-700 mb-2">No tiene baño privado</p>
+              )
+            ) : (
+              property.type == 'Cama' ? (
+                <></>
+              ) : (
+                <p className="text-gray-700 mb-2">Baños: {property.baths}</p>
+              )
+              
+            )}
+
+
+            {property.type == 'Habitacion' || property.type == 'Cama' ? (
+              <></>
+            ) : (
+              <p className="text-gray-700 mb-2">Dormitorios: {property.dormitories}</p>
+            )}
+            
             <p className="text-gray-700 mb-2">Dirección: {property.localization}</p>
           </div>
 
