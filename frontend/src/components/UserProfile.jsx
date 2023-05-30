@@ -4,6 +4,7 @@ import { AuthContext } from '../api/AuthContext';
 import { useContext } from 'react';
 import { PhoneInput } from './PhoneInput'
 import api from '../api/api.js';
+import jwtDecode from 'jwt-decode';
 
 
 
@@ -104,8 +105,8 @@ export const UserProfile = () => {
         
 
           if (isStudent){
-            const token = localStorage.getItem('jwtToken')
-            response = await api.put(`/api/students/${userInfo.id}`, formData, {
+            const token = localStorage.getItem('jwtToken'); 
+            response = await api.put(`/api/students/${jwtDecode(token).user_id}`, formData, {
             headers: {
               'Authorization': 'Bearer ' + token
             }
@@ -117,11 +118,15 @@ export const UserProfile = () => {
               setSuccessMessageAnimation('slide-out-to-left');
               setTimeout(() => setShowUpdateMessage(false), 500);
             }, 3000);
-
+            const newUserInfo = {
+              ...response.data,
+              id: jwtDecode(token).user_id
+            };
+            localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
           }
           else if(isOwner){
-            const token = localStorage.getItem('jwtToken')
-            response = await api.put(`/api/owners/${userInfo.id}`, formData, {
+            const token = localStorage.getItem('jwtToken');
+            response = await api.put(`/api/owners/${jwtDecode(token).user_id}`, formData, {
               headers: {
                 'Authorization': 'Bearer ' + token
               }
@@ -132,9 +137,16 @@ export const UserProfile = () => {
               setSuccessMessageAnimation('slide-out-to-left');
               setTimeout(() => setShowUpdateMessage(false), 500);
             }, 3000);
+            const newUserInfo = {
+              ...response.data,
+              id: jwtDecode(token).user_id
+            };
+            localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
 
           }
+
           
+
 
         } catch (error) {
            
@@ -319,22 +331,35 @@ export const UserProfile = () => {
 
     if (isStudent) {
       const token = localStorage.getItem("jwtToken");
-      response = await api.put(`/api/students/photo-update/${userInfo.id}`, formData, {
+      response = await api.put(`/api/students/photo-update/${jwtDecode(token).user_id}`, formData, {
         headers: {
           'Authorization': 'Bearer ' + token
         }
       });
-        setShowPhotoMessage(true);
-        setSuccessMessageAnimation('slide-in-from-left');
-        setTimeout(() => {
+      setShowPhotoMessage(true);
+      setSuccessMessageAnimation('slide-in-from-left');
+      setTimeout(() => {
           setSuccessMessageAnimation('slide-out-to-left');
           setTimeout(() => setShowPhotoMessage(false), 500);
         }, 3000);
+
+        const newUserInfo = {
+          ...userInfo,
+          photo: response.data.photo
+        };
+        localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+        
+        const event = new CustomEvent('photoUpdate', {
+          detail: {
+            photoUpdate: response.data.photo
+          }
+        });
+        window.dispatchEvent(event);
     }
 
     else if (isOwner) {
       const token = localStorage.getItem("jwtToken");
-      response = await api.put(`/api/owners/photo-update/${userInfo.id}`, formData, {
+      response = await api.put(`/api/owners/photo-update/${jwtDecode(token).user_id}`, formData, {
         headers: {
           'Authorization': 'Bearer ' + token
         }
@@ -345,6 +370,20 @@ export const UserProfile = () => {
         setSuccessMessageAnimation('slide-out-to-left');
         setTimeout(() => setShowPhotoMessage(false), 500);
       }, 3000);
+
+
+      const newUserInfo = {
+        ...userInfo,
+        photo: response.data.photo
+      };
+      localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+
+      const event = new CustomEvent('photoUpdate', {
+        detail: {
+          photoUpdate: response.data.photo
+        }
+      });
+      window.dispatchEvent(event);
     }
          
       
@@ -658,4 +697,3 @@ export const UserProfile = () => {
   </>
   );
 };
-

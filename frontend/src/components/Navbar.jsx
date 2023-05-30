@@ -44,6 +44,21 @@ export function Navbar() {
 
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    const handleProfilePhotoUpdate = (event) => {
+      setUserInfo(prevUserInfo => ({
+        ...prevUserInfo,
+        photo: event.detail.photoUpdate
+      }));
+    };
+  
+    window.addEventListener('photoUpdate', handleProfilePhotoUpdate);
+  
+    return () => {
+      window.removeEventListener('photoUpdate', handleProfilePhotoUpdate);
+    };
+  }, []);
+
 
 
   return (
@@ -66,8 +81,7 @@ export function Navbar() {
             </Link>
 
 
-            <Link
-              to='/announcements' className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 
+            <Link to='/announcements' className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 
                text-sm font-medium mr-4 ${
                 location.pathname === '/announcements' ? 'bg-gray-700' : ''
               }`}>
@@ -76,9 +90,8 @@ export function Navbar() {
             </Link>
 
             {isLoggedIn && isOwner ? (
-              <Link
-              to='/createAnnouncement' className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2 py-2 
-               text-sm font-medium mr-4 ${
+              <Link to='/createAnnouncement' className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-2
+               py-2 text-sm font-medium mr-4 ${
                 location.pathname === '/createAnnouncement' ? 'bg-gray-700' : ''
               }`}>
                 

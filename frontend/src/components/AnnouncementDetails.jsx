@@ -93,7 +93,7 @@ export const AnnouncementDetails = () => {
     return <></>;
   }
   
-
+console.log(ownerStudent)
 
 
   return (
@@ -111,14 +111,14 @@ export const AnnouncementDetails = () => {
           {photos.length > 1 && (
             <>
               <button onClick={handlePrevPhoto}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-100 text-gray-700 p-2 rounded-full
-                hover:bg-blue-300">
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-sky-300 text-gray-700 p-2 rounded-full
+                hover:bg-blue-400">
                 &#x276E;
               </button>
               
               <button onClick={handleNextPhoto}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-100 text-gray-700 p-2 rounded-full
-                hover:bg-blue-300 ml-AnnouncementDetails">
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-sky-300 text-gray-700 p-2 rounded-full
+                hover:bg-blue-400 ml-AnnouncementDetails">
                 &#x276F;
               </button>
             </>
@@ -179,7 +179,7 @@ export const AnnouncementDetails = () => {
                       Datos del propietario
                       <span className="text-red-500"> {ownerStudent.username}</span>: <br />
                       {ownerStudent && ownerStudent.photo ? (
-                        <img className="h-12 w-12 rounded-full" src={"api/" + userInfo.photo} />
+                        <img className="h-12 w-12 rounded-full" src={"/api" + ownerStudent.photo} />
                       ) : (
                         <UserCircleIcon className="h-12 w-12 text-gray-700" aria-hidden="true" />
                       )}

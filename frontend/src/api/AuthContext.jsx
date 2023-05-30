@@ -72,6 +72,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('refreshToken');
         setIsLoggedIn(false);
+        setIsOwner(false);
+        setIsStudent(false);
 
       } else {
         // Manejo del error del token expirado
@@ -79,6 +81,8 @@ export const AuthProvider = ({ children }) => {
           localStorage.removeItem('jwtToken');
           localStorage.removeItem('refreshToken');
           setIsLoggedIn(false);
+          setIsOwner(false);
+          setIsStudent(false);
         }
       }
     } catch (error) {
