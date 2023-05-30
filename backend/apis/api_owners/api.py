@@ -3,13 +3,16 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from apis.permissions_decorators import IsOwnerOrAdmin, IsAdmin, IsStudentOrAdmin
+from apis.permissions_decorators import IsOwnerOrAdmin, IsAdmin, IsStudentOrAdmin, IsOwner
 from rest_framework.exceptions import PermissionDenied
 
 
 from apis.models import Owner, Property
-from .serializers import OwnerSerializer, OwnerPublicSerializer, OwnerStudentSerializer
+from .serializers import OwnerSerializer, OwnerPublicSerializer, OwnerStudentSerializer, OwnerUpdateSerializer
 from apis.api_properties.serializers import PropertySerializer
+
+from django.contrib.auth.hashers import check_password
+
 
 
 @api_view(['GET', 'POST'])
@@ -70,7 +73,7 @@ def owner_detail_api_view(request, id):
         elif request.method == 'PUT':
             if aux:
                 data = request.data
-                serializer = OwnerSerializer(owner, data = data)
+                serializer = OwnerUpdateSerializer(owner, data = data)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -152,4 +155,65 @@ def owner_student_detail_api_view(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
             
 
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated, IsOwner])
+def owner_verify_password(request):
+    # Obtener la contraseña introducida por el usuario desde la solicitud
+    entered_password = request.data.get('password')
+    
+    # Obtener el usuario y la contraseña encriptada almacenada en la base de datos
+    user = Owner.objects.get(username=request.user.username)
+    stored_password = user.password
+    
+    print(entered_password, stored_password)
+    # Verificar si las contraseñas coinciden
+    if check_password(entered_password, stored_password):
+        
+        # Las contraseñas coinciden
+        return Response({'password_correct': True})
+    else:
+        return Response({'password_correct': False})
+    
+
+
+@api_view(['PUT'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated, IsOwner])
+def owner_profile_change_password(request):
+
+    new_password = request.data.get('new_password')
+
+    if len(new_password) < 8:
+        return Response({'message': 'La contraseña debe tener al menos 8 caracteres'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        user = Owner.objects.get(username=request.user.username)
+        user.set_password(new_password)
+        user.save()
+        return Response({'message': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
+    except Owner.DoesNotExist:
+        return Response({'message': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['PUT'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated, IsOwnerOrAdmin])
+def owner_photo_update(request, id):
+    owner = Owner.objects.filter(id=id).first()
+    if owner:
+        aux = request.user.id == owner.id
+        if not (aux or request.user.isAdministrator):
+            return Response({'message':"No puede actualizar la foto de otro propietario!"}, status=status.HTTP_403_FORBIDDEN)
+        data = request.data
+        serializer = OwnerUpdateSerializer(owner, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)

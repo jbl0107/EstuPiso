@@ -4,10 +4,12 @@ from apis.api_users.api import (
     get_user_type)
 
 from apis.api_students.api import (
-    student_api_view, student_detail_api_view, student_valoration_done_to_properties_api_view)
+    student_api_view, student_detail_api_view, student_valoration_done_to_properties_api_view, student_verify_password, 
+    student_profile_change_password, student_photo_update)
 
 from apis.api_owners.api import (
-    owner_api_view, owner_detail_api_view, owner_properties_api_view, owner_public_detail_api_view, owner_student_detail_api_view)
+    owner_api_view, owner_detail_api_view, owner_properties_api_view, owner_public_detail_api_view, owner_student_detail_api_view,
+    owner_verify_password, owner_profile_change_password, owner_photo_update)
 
 from apis.api_rules.api import rule_api_view, rule_detail_api_view
 
@@ -63,12 +65,19 @@ urlpatterns = [
     path('students/', student_api_view, name='student_api'),
     path('students/<int:id>', student_detail_api_view, name='student_detail_api'),
     path('students/<int:id>/valorations/done/properties/', student_valoration_done_to_properties_api_view, name='student_valorations_done_to_properties_api'),
+    path('students/verify-pass', student_verify_password, name='student_verify_pass_api'),
+    path('students/profile-pass-change', student_profile_change_password, name='student_profile_pass_change'),
+    path('students/photo-update/<int:id>', student_photo_update, name='student_photo_update'),
 
     path('owners/', owner_api_view, name='owner_api'),
     path('owners/<int:id>', owner_detail_api_view, name='owner_detail_api'),
     path('owners/<int:id>/properties', owner_properties_api_view, name='owner_properties_api'),
     path('owners/<int:id>/public', owner_public_detail_api_view, name='owner_public_detail_api'),
     path('owners/<int:id>/student', owner_student_detail_api_view, name='owner_student_detail_api'),
+    path('owners/verify-pass', owner_verify_password, name='owner_verify_pass_api'),
+    path('owners/profile-pass-change', owner_profile_change_password, name='owner_profile_pass_change'),
+    path('owners/photo-update/<int:id>', owner_photo_update, name='owner_photo_update'),
+    
 
     path('rules/', rule_api_view, name='rule_api'),
     path('rules/<int:id>', rule_detail_api_view, name='rule_detail_api'),
