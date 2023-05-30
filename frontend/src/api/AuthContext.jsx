@@ -89,6 +89,7 @@ export const AuthProvider = ({ children }) => {
 
 
   const[isOwner, setIsOwner] = useState(null);
+  const[isStudent, setIsStudent] = useState(null);
 
   useEffect(() => {
     if(isLoggedIn){
@@ -104,6 +105,9 @@ export const AuthProvider = ({ children }) => {
         if (userTypeData.userType === "owner"){
           setIsOwner(true);
         }
+        else if(userTypeData.userType === "student"){
+          setIsStudent(true);
+        }
         
       };
       fetchUserType();
@@ -113,7 +117,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, handleLogout, isOwner }}>
+    <AuthContext.Provider value={{ isLoggedIn, handleLogout, isOwner, isStudent }}>
       {children}
     </AuthContext.Provider>
   );

@@ -12,8 +12,7 @@ export const Announcements = () => {
       .then((response) => response.json())
       .then((data) => setAnnouncements(data))
       .catch((error) => {
-        // Manejar el error aquí
-        console.error(error);
+        
       });
   }, []);
 

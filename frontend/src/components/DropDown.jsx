@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import React, { useState } from 'react';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 
 
@@ -6,6 +6,8 @@ export const DropdownMenu = ({ children, userInfo }) => {
     const [isOpen, setIsOpen] = useState(false);
   
     const handleToggle = () => setIsOpen(!isOpen);
+
+    
   
     return (
       <div className="relative">
@@ -17,9 +19,15 @@ export const DropdownMenu = ({ children, userInfo }) => {
           )}
         </button>
         {isOpen && (
-          <div className="absolute right-4 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-            {children}
-          </div>
+        <div className="absolute right-4 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+          {React.Children.map(children, child => {
+            if (child.props.nocloseonclick) {
+              return child;
+            } else {
+              return React.cloneElement(child, { onClick: () => setIsOpen(false) });
+            }
+          })}
+        </div>
         )}
       </div>
     );

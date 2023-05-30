@@ -11,7 +11,6 @@ import { AuthContext } from '../api/AuthContext';
 
 export function Navbar() {
 
-
   const location = useLocation();
   const { isLoggedIn, handleLogout, isOwner } = useContext(AuthContext);
 
@@ -36,8 +35,16 @@ export function Navbar() {
       };
       fetchUserInfo();
     }
-  }, []);
-  
+    
+    return () => {
+      localStorage.removeItem('userInfo');
+      setUserInfo(null);
+    };
+
+
+  }, [isLoggedIn]);
+
+
 
   return (
     
@@ -104,9 +111,10 @@ export function Navbar() {
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
                   <img src="/src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>
                 </span>
+
                 
-                <Link to="/userProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-800 
-                rounded-t-md pl-10">Mi perfil</Link>
+                <Link to="/userProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100
+                 hover:text-blue-800 rounded-t-md pl-10">Mi perfil</Link>
 
 
 
@@ -114,8 +122,8 @@ export function Navbar() {
                   <img src="/src/assets/logout.svg" alt="Lock icon" className="w-6 h-5"/>
                 </span>
                 
-                <Link to="/" onClick={handleLogout} className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100
-                 hover:text-blue-800 pl-10 rounded-b-md
+                <Link to="/" onClick={handleLogout} nocloseonclick="true" className={`block px-4 py-2 text-sm text-gray-700 
+                hover:bg-gray-100 hover:text-blue-800 pl-10 rounded-b-md
                 ${
                   location.pathname === '/' ? '' : ''
                 }`}>

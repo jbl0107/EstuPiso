@@ -239,7 +239,7 @@ export const RegisterForm = () => {
                         <label className="block text-white text-sm font-bold mb-2" htmlFor="telephone">
                             Telefono
                         </label>
-                        <PhoneInput onPrefixChange={handlePrefixChange} error = {telephoneError}/>
+                        <PhoneInput onPrefixChange={handlePrefixChange} error = {telephoneError} isUpdate={false}/>
                         
                     </div>
 
@@ -361,8 +361,8 @@ export const RegisterForm = () => {
                         {errorMessageRegister && <p className="text-red-700 font-bold">{errorMessageRegister}</p>}
                         <br></br>
                         <div className="mb-4">
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded
-                             focus:outline-none focus:shadow-outline" type="submit">
+                            <button className="bg-white hover:bg-sky-500 text-black font-bold py-2 px-4 rounded-lg
+                             focus:outline-none focus:shadow-outline hover:text-white" type="submit">
                             Registrarse
                             </button>
                     </div>
@@ -371,7 +371,7 @@ export const RegisterForm = () => {
                 
 
                     <div>
-                        <span className="inline-block align-baseline font-bold text-sm text-blue-500" to="#">
+                        <span className="inline-block align-baseline font-bold text-sm text-white" to="#">
                         ¿Ya está registrado? <Link className="hover:text-white hover:underline" to="/loginForm">Inicie sesión aquí</Link>
                         </span>
                     </div>

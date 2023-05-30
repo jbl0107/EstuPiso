@@ -510,7 +510,7 @@ export const CreateAnnouncement = () => {
                 {uniqueTogetherError && <p className="text-red-600 text-sm">{uniqueTogetherError}</p>}
                 <br></br>
                 <div className="mb-4">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded
+                    <button className="bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg
                       focus:outline-none focus:shadow-outline" type="submit">
                       Publicar
                     </button>

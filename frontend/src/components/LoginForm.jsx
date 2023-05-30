@@ -101,20 +101,22 @@ export const LoginForm = () => {
 
                 <div className="flex flex-col items-center">
                     <div className="mb-4">
-                        <button className="bg-white hover:bg-blue-700 text-black font-bold py-2 px-4 rounded hover:text-white
-                        focus:outline-none focus:shadow-outline" type="submit">
+                        <button className="bg-white hover:bg-blue-700 text-black font-bold py-2 px-4 rounded-lg 
+                        hover:text-white focus:outline-none focus:shadow-outline" type="submit">
                         Iniciar sesión
                         </button>
                     </div>
                     
+                    <span className="inline-block align-baseline font-bold text-sm text-white justify-center">
+                        <Link className="hover:underline" to="/registerForm">¿Aún no estas registrado?</Link>
+                    </span>
+                    <br/>
+                    <span className="inline-block align-baseline font-bold text-sm text-white justify-center">
+                        <Link className='hover:underline' to="/">Accede a la página principal desde aquí</Link>
+                    </span>
+
+
                     
-
-
-                    <div>
-                        <span className="inline-block align-baseline font-bold text-sm text-white" to="#">
-                         <Link className="hover:text-blue-300 hover:underline" to="/registerForm">¿Aún no estas registrado?</Link>
-                        </span>
-                    </div>
                     
                 </div>
 

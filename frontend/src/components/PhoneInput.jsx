@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-export function PhoneInput({onPrefixChange, error}) {
+export function PhoneInput({onPrefixChange, error, isUpdate, currentUserNumber}) {
   const [prefix, setPrefix] = useState('+34'); //se utiliza para actualizar estado interno del componente
-  const [number, setNumber] = useState('');
+  const [number, setNumber] = useState(isUpdate ? currentUserNumber : '');
 
   const prefixes = ['+1', '+44', '+33', '+34'];
 
@@ -33,6 +33,7 @@ export function PhoneInput({onPrefixChange, error}) {
             ))}
           </select>
           
+
           <input type="text" value={number} onChange={handleNumberChange} placeholder="687098123" id="telephone" name="telephone"
             className='shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none
             focus:shadow-outline'/>
