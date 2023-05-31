@@ -1,12 +1,14 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchRules, fetchPhotos, fetchServices, fetchOwner, fetchOwnerStudent } from '../api/properties';
 import jwtDecode from 'jwt-decode';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 
 import { useContext } from 'react';
 import { AuthContext } from '../api/AuthContext';
+import api from '../api/api.js'
+
 
 export const AnnouncementDetails = () => {
 
@@ -87,13 +89,47 @@ export const AnnouncementDetails = () => {
   }, [isLoggedIn, property]);
 
 
+  let user_id;
+  let token;
+  if(isLoggedIn){
+    token = localStorage.getItem('jwtToken');
+    user_id = jwtDecode(token).user_id;
+  }
+  
+
+
+
+  const[errorMessage, setErrorMessage] = useState(null);
+
+  const navigate = useNavigate();
+  const handleDelete = async (event) => {
+    event.preventDefault();
+
+    try {
+
+      const token = localStorage.getItem('jwtToken');
+      let response = await api.delete(`/api/properties/${property.id}`, {
+      headers: {
+        'Authorization': 'Bearer ' + token,
+      }
+
+      });
+      navigate('/announcements');
+
+    } catch(error) {
+
+      setErrorMessage('Ocurrió un error al borrar el anuncio.');
+    }
+    
+
+    
+  }
 
 
   if (!property) {
     return <></>;
   }
   
-console.log(ownerStudent)
 
 
   return (
@@ -124,7 +160,7 @@ console.log(ownerStudent)
             </>
           )}
 
-
+      
       <h2 className="text-lg font-medium mb-2">{property.title}</h2>
       
       <div className='p-4 border rounded-lg shadow-md'>
@@ -258,6 +294,21 @@ console.log(ownerStudent)
       )}
       
     </div>
+
+    {isOwner && property.owner == user_id ? (
+      <div className='flex justify-center mb-7'>
+      <form onSubmit={handleDelete}>
+        <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none
+         focus:shadow-outline" type="submit">
+          Eliminar
+        </button>
+        {errorMessage && <p className="text-red-600 font-bold">{errorMessage}</p>}
+      </form>
+    </div>
+    ):(
+      <></>
+    )}
+    
     </>
   );
 };
