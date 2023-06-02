@@ -86,7 +86,7 @@ def message_detail_api_view(request, id):
             else:
                 return Response({'message':"No puede borrar un mensaje que no haya enviado"}, status=status.HTTP_403_FORBIDDEN)
     
-    return Response({'message':"No se ha encontrado un mensaje con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un mensaje con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -122,7 +122,7 @@ def message_user_api_view(request, id_user):
                 return Response({'message':"No puede ver los mensajes de otros usuarios"}, status=status.HTTP_403_FORBIDDEN)
 
         
-    return Response({'message':"El usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"El usuario no existe"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -155,4 +155,4 @@ def message_user_conversation_api_view(request, id_user1, id_user2):
             return Response({'message':"No puede obtener una conversación en la que no es participe"}, status=status.HTTP_403_FORBIDDEN)
 
         
-    return Response({'message':"Alguno de los usuarios no existe"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"Alguno de los usuarios no existe"}, status=status.HTTP_404_NOT_FOUND)

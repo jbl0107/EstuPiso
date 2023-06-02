@@ -114,7 +114,7 @@ def studentAnnouncement_detail_api_view(request, id):
             studentAnnouncement.delete()
             return Response({'message':"Anuncio de estudiante eliminado correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado un anuncio de estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un anuncio de estudiante con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -142,4 +142,4 @@ def studentAnnouncement_student_api_view(request, id):
             serializer = StudentAnnouncementSerializer(studentAnnouncement)
             return Response(serializer.data, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_404_NOT_FOUND)

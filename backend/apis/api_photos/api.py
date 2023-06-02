@@ -85,7 +85,7 @@ def photo_detail_api_view(request, id):
         
 
         
-    return Response({'message':"No se ha encontrado una foto con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una foto con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -106,6 +106,6 @@ def photo_owner_detail_api_view(request, id):
             serializer = PhotoSerializer(photos, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
          
-    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 

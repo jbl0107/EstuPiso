@@ -86,4 +86,4 @@ def service_detail_api_view(request, id):
             service.delete()
             return Response({'message':"Servicio eliminado correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado un servicio con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un servicio con estos datos"}, status=status.HTTP_404_NOT_FOUND)

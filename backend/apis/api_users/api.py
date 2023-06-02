@@ -131,7 +131,7 @@ def user_detail_api_view(request, id):
             user.delete()
             return Response({'message':"Usuario eliminado correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un usuario con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -158,7 +158,7 @@ def user_valoration_received_api_view(request, id):
             return Response(serializer.data, status = status.HTTP_200_OK)
     
 
-    return Response({'message': "No se ha encontrado un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+    return Response({'message': "No se ha encontrado un usuario con estos datos"}, status=status.HTTP_404_NOT_FOUND) 
 
 
 
@@ -182,7 +182,7 @@ def user_valoration_done_to_users_api_view(request, id):
             return Response(serializer.data, status = status.HTTP_200_OK)
     
 
-    return Response({'message': "No se ha encontrado un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+    return Response({'message': "No se ha encontrado un usuario con estos datos"}, status=status.HTTP_404_NOT_FOUND) 
 
 
 

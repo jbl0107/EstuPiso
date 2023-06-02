@@ -90,4 +90,4 @@ def interestService_detail_api_view(request, id):
             return Response({'message':"Servicio de interés eliminado correctamente!"}, status=status.HTTP_200_OK)
             
         
-    return Response({'message':"No se ha encontrado un servicio de interés con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un servicio de interés con estos datos"}, status=status.HTTP_404_NOT_FOUND)

@@ -64,7 +64,7 @@ def valoration_user_detail_api_view(request, id):
             valoration.delete()
             return Response({'message':"Valoración a usuario eliminada correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado una valoración a un usuario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una valoración a un usuario con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -101,7 +101,7 @@ def valoration_property_api_view(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -129,4 +129,4 @@ def valoration_property_detail_api_view(request, id):
             valoration.delete()
             return Response({'message':"Valoración a un inmueble eliminada correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado una valoración a un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una valoración a un inmueble con estos datos"}, status=status.HTTP_404_NOT_FOUND)

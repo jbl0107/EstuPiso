@@ -92,7 +92,7 @@ def owner_detail_api_view(request, id):
                 return Response({'message':"No puede borrar a otro propietario que no sea usted mismo"}, status=status.HTTP_403_FORBIDDEN)
         
 
-    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -116,7 +116,7 @@ def owner_properties_api_view(request, id):
             else:
                 return Response({'message':"Solo puede obtener todas sus propiedades"}, status=status.HTTP_403_FORBIDDEN)
         
-    return Response({'message': 'No se ha encontrado un propietario con estos datos'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message': 'No se ha encontrado un propietario con estos datos'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -135,7 +135,7 @@ def owner_public_detail_api_view(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
             
 
-    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -155,7 +155,7 @@ def owner_student_detail_api_view(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
             
 
-    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -170,7 +170,6 @@ def owner_verify_password(request):
     user = Owner.objects.get(username=request.user.username)
     stored_password = user.password
     
-    print(entered_password, stored_password)
     # Verificar si las contraseñas coinciden
     if check_password(entered_password, stored_password):
         
@@ -216,4 +215,4 @@ def owner_photo_update(request, id):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un propietario con estos datos"}, status=status.HTTP_404_NOT_FOUND)

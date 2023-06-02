@@ -90,7 +90,7 @@ def groupReservation_detail_api_view(request, id):
             return Response({'message':"Solicitud grupal eliminada correctamente!"}, status=status.HTTP_200_OK)
        
         
-    return Response({'message':"No se ha encontrado una solicitud grupal con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una solicitud grupal con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -114,4 +114,4 @@ def groupReservation_student_api_view(request, id):
         return Response({'message': 'Solo puede obtener todas sus solicitudes grupales'}, status=status.HTTP_403_FORBIDDEN)
         
    else:
-    return Response({'message': 'No se ha encontrado un estudiante con estos datos'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message': 'No se ha encontrado un estudiante con estos datos'}, status=status.HTTP_404_NOT_FOUND)

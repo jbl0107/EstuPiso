@@ -108,7 +108,7 @@ def property_detail_api_view(request, id):
                 return Response({"message":"No puede borrar un inmueble de otro propietario"}, status=status.HTTP_403_FORBIDDEN)
              
         
-    return Response({'message':"No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -126,7 +126,7 @@ def property_rules_api_view(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         
-    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -143,7 +143,7 @@ def property_photos_api_view(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         
-    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_404_NOT_FOUND) 
 
 
 @api_view(['GET'])
@@ -159,7 +159,7 @@ def property_services_api_view(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         
-    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_404_NOT_FOUND) 
 
 
 
@@ -184,7 +184,7 @@ def property_valorations_api_view(request, id):
             return Response(serializer.data, status = status.HTTP_200_OK)
     
 
-    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+    return Response({'message': "No se ha encontrado un inmueble con estos datos"}, status=status.HTTP_404_NOT_FOUND) 
 
 
 

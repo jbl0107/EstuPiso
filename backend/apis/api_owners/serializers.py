@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apis.models import Owner
 import re
+from rest_framework.exceptions import PermissionDenied
 
 
 class OwnerSerializer(serializers.ModelSerializer):
@@ -29,7 +30,7 @@ class OwnerSerializer(serializers.ModelSerializer):
 
     def validate_isAdministrator(self, value):
         if value:
-            raise serializers.ValidationError('Un propietario no puede ser administrador')
+            raise PermissionDenied('Un propietario no puede ser administrador')
             
         return value
 
@@ -89,7 +90,7 @@ class OwnerUpdateSerializer(serializers.ModelSerializer):
 
     def validate_isAdministrator(self, value):
         if value:
-            raise serializers.ValidationError('Un propietario no puede ser administrador')
+            raise PermissionDenied('Un propietario no puede ser administrador')
             
         return value
 

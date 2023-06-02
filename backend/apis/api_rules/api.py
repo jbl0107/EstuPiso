@@ -88,4 +88,4 @@ def rule_detail_api_view(request, id):
             rule.delete()
             return Response({'message':"Norma eliminada correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado una norma con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una norma con estos datos"}, status=status.HTTP_404_NOT_FOUND)

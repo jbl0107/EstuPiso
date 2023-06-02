@@ -115,7 +115,7 @@ def experience_detail_api_view(request, id):
                 
             
         
-    return Response({'message':"No se ha encontrado una experiencia con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una experiencia con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -140,4 +140,4 @@ def experience_student_api_view(request, id):
 
    else:
 
-    return Response({'message': 'No se ha encontrado un estudiante con estos datos'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message': 'No se ha encontrado un estudiante con estos datos'}, status=status.HTTP_404_NOT_FOUND)

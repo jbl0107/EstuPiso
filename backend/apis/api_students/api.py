@@ -92,7 +92,7 @@ def student_detail_api_view(request, id):
             student.delete()
             return Response({'message':"Estudiante eliminado correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -119,7 +119,7 @@ def student_valoration_done_to_properties_api_view(request, id):
             return Response(serializer.data, status = status.HTTP_200_OK)
     
 
-    return Response({'message': "No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST) 
+    return Response({'message': "No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_404_NOT_FOUND) 
 
 
 
@@ -181,4 +181,4 @@ def student_photo_update(request, id):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un estudiante con estos datos"}, status=status.HTTP_404_NOT_FOUND)

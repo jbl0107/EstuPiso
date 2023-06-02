@@ -93,7 +93,7 @@ def interestServiceProperty_detail_api_view(request, id):
             interestServiceProperty.delete()
             return Response({'message':"Servicio de interés de una propiedad eliminado correctamente!"}, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado un servicio de interés de una propiedad con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado un servicio de interés de una propiedad con estos datos"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -112,4 +112,4 @@ def interestServiceProperty_property_api_view(request, id):
             serializer = InterestServicePropertySerializer(res, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         
-    return Response({'message':"No se ha encontrado una propiedad con estos datos"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'message':"No se ha encontrado una propiedad con estos datos"}, status=status.HTTP_404_NOT_FOUND)
