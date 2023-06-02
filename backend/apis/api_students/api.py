@@ -110,7 +110,7 @@ def student_valoration_done_to_properties_api_view(request, id):
         if request.method == 'GET':
             
             if not (aux or request.user.isAdministrator):
-                return Response({'message':"No puede acceder a las valoraciones de otro estudiante!"}, status=status.HTTP_403_FORBIDDEN)
+                return Response({'message':"Solo puedes una lista de tus valoraciones realizadas"}, status=status.HTTP_403_FORBIDDEN)
 
             #queryset
         
@@ -137,9 +137,9 @@ def student_verify_password(request):
     # Verificar si las contraseñas coinciden
     if check_password(entered_password, stored_password):
         # Las contraseñas coinciden
-        return Response({'password_correct': True}, status=status.HTTP_201_CREATED)
+        return Response({'password_correct': True})
     else:
-        return Response({'password_correct': False}, status=status.HTTP_201_CREATED)
+        return Response({'password_correct': False})
     
 
 

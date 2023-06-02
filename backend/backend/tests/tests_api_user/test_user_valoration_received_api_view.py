@@ -2,7 +2,7 @@ from faker import Faker
 
 from rest_framework import status
 from rest_framework.test import APITestCase
-from apis.models import User
+from apis.models import User, UserValoration
 
 class TestUserDetailApiView(APITestCase):
 
@@ -27,6 +27,18 @@ class TestUserDetailApiView(APITestCase):
             name=fake.name(),
             surname=fake.last_name(),
             username='user2',
+            password='hola1234',
+            email=fake.email(), 
+            telephone=fake.phone_number(),
+            photo=None
+        
+        )
+
+        self.user_3 = User.objects.create_user(
+            dni='12343399P',
+            name=fake.name(),
+            surname=fake.last_name(),
+            username='user3',
             password='hola1234',
             email=fake.email(), 
             telephone=fake.phone_number(),
@@ -65,6 +77,42 @@ class TestUserDetailApiView(APITestCase):
         self.token_user = response_user.data['access']
         self.token_admin = response_admin.data['access']
 
+        self.valoration_student = UserValoration.objects.create(
+            value = 4,
+            title = 'Title',
+            review = 'Review del usuario 2',
+            valuer = self.user,
+            valued = self.user_2
+
+        )
+
+        self.valoration_student_2 = UserValoration.objects.create(
+            value = 5,
+            title = 'Titulo de ejemplo',
+            review = 'Review del usuario 3',
+            valuer = self.user,
+            valued = self.user_3
+
+        )
+
+        self.valoration_student_3 = UserValoration.objects.create(
+            value = 2,
+            title = 'Titulo de ejemplo 2',
+            review = 'Review del usuario 3',
+            valuer = self.user_2,
+            valued = self.user_3
+
+        )
+
+        self.valoration_student_4 = UserValoration.objects.create(
+            value = 2,
+            title = 'Titulo de ejemplo 2',
+            review = 'Review del usuario',
+            valuer = self.user_2,
+            valued = self.user
+
+        )
+
 
     
     def test_negative(self):
@@ -81,16 +129,24 @@ class TestUserDetailApiView(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_user)
         response = self.client.get(f'/users/{self.admin.id}/valorations/received')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_user)
         response = self.client.get(f'/users/{self.user.id}/valorations/received')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['id'], self.valoration_student_4.id)
+        self.assertEqual(len(response.data), 1)
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_admin)
-        response = self.client.get(f'/users/{self.user.id}/valorations/received')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_user)
         response = self.client.get(f'/users/{self.user_2.id}/valorations/received')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['id'], self.valoration_student.id)
+        self.assertEqual(len(response.data), 1)
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_user)
+        response = self.client.get(f'/users/{self.user_3.id}/valorations/received')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['id'], self.valoration_student_2.id)
+        self.assertEqual(response.data[1]['id'], self.valoration_student_3.id)
+        self.assertEqual(len(response.data), 2)
 

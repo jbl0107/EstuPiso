@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apis.models import Student
 import re
+from rest_framework.exceptions import PermissionDenied
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -29,7 +30,7 @@ class StudentSerializer(serializers.ModelSerializer):
         
     def validate_isAdministrator(self, value):
         if value:
-            raise serializers.ValidationError('Un estudiante no puede ser administrador')
+            raise PermissionDenied('Un estudiante no puede ser administrador')
             
         return value
         
@@ -73,7 +74,7 @@ class StudentUpdateSerializer(serializers.ModelSerializer):
 
     def validate_isAdministrator(self, value):
         if value:
-            raise serializers.ValidationError('Un estudiante no puede ser administrador')
+            raise PermissionDenied('Un estudiante no puede ser administrador')
             
         return value
 

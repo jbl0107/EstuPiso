@@ -3,12 +3,20 @@ from faker import Faker
 from rest_framework import status
 from rest_framework.test import APITestCase
 from apis.models import Owner, User, Student
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+from tempfile import TemporaryDirectory
+from django.conf import settings
 
 
-class TestOwnerStudentDetailApiView(APITestCase):
+
+class TestStudentPhotoUpdate(APITestCase):
 
     
     def setUp(self):
+
+        self.temp_dir = TemporaryDirectory()
+        settings.MEDIA_ROOT = self.temp_dir.name
 
         fake = Faker('es_ES')
         self.owner = Owner.objects.create_user(
@@ -23,19 +31,6 @@ class TestOwnerStudentDetailApiView(APITestCase):
         
         )
 
-        self.owner_2 = Owner.objects.create_user(
-            dni='11223399P',
-            name=fake.name(),
-            surname=fake.last_name(),
-            username='user2',
-            password='hola1234',
-            email=fake.email(), 
-            telephone=fake.phone_number(),
-            photo=None
-        
-        )
-
-
         self.student = Student.objects.create_user(
             dni='22337788O',
             name=fake.name(),
@@ -48,6 +43,17 @@ class TestOwnerStudentDetailApiView(APITestCase):
         
         )
 
+        self.student_2 = Student.objects.create_user(
+            dni='11223399P',
+            name=fake.name(),
+            surname=fake.last_name(),
+            username='user2',
+            password='hola1234',
+            email=fake.email(), 
+            telephone=fake.phone_number(),
+            photo=None
+        
+        )
 
         self.admin = User.objects.create_superuser(
             dni='22334455A',
@@ -91,48 +97,66 @@ class TestOwnerStudentDetailApiView(APITestCase):
 
 
 
-
     def test_negative(self):
-        response = self.client.get(f'/owners/{self.owner.id}/student')
+        response = self.client.put(f'/students/photo-update/{self.student.id}')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
-        response = self.client.get(f'/owners/{self.owner.id}/student')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
-        response = self.client.get(f'/owners/{self.owner_2.id}/student')
+        response = self.client.put(f'/students/photo-update/{self.student.id}')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
-        response = self.client.get(f'/owners/{self.owner_2.id+10}/student')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.put(f'/students/photo-update/{self.student_2.id}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-  
+
+        photo = {
+            'photo': 'image'
+        }
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
+        response = self.client.put(f'/students/photo-update/{self.student.id}', photo)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
+        response = self.client.put(f'/students/photo-update/{self.student_2.id+10}')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
     def test_positive(self):
 
-        info = {
-            "username": self.owner.username,
-            "photo": self.owner.photo,
-            "name": self.owner.name,
-            "telephone": self.owner.telephone
-        }
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
-        response = self.client.get(f'/owners/{self.owner.id}/student')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, info)
-  
+        image = SimpleUploadedFile(name='test_image.jpg', content=open('backend/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
+                                   content_type='image/jpeg')
+        
+        
 
-        info_2 = {
-            "username": self.owner_2.username,
-            "photo": self.owner_2.photo,
-            "name": self.owner_2.name,
-            "telephone": self.owner_2.telephone
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
+        photo = {
+            'photo': image
+        }
+        response = self.client.put(f'/students/photo-update/{self.student.id}', photo)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
+        photo = {
+            'photo': ''
+        }
+        response = self.client.put(f'/students/photo-update/{self.student.id}', photo)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+        photo = {
+            'photo': image
         }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_admin)
-        response = self.client.get(f'/owners/{self.owner_2.id}/student')
+        response = self.client.put(f'/students/photo-update/{self.student_2.id}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, info_2)
+  
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
+
+  
+
+
 

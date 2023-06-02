@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from apis.models import Owner, User, Student
 
 
-class TestOwnerStudentDetailApiView(APITestCase):
+class TestStudentProfileChangePassword(APITestCase):
 
     
     def setUp(self):
@@ -23,19 +23,6 @@ class TestOwnerStudentDetailApiView(APITestCase):
         
         )
 
-        self.owner_2 = Owner.objects.create_user(
-            dni='11223399P',
-            name=fake.name(),
-            surname=fake.last_name(),
-            username='user2',
-            password='hola1234',
-            email=fake.email(), 
-            telephone=fake.phone_number(),
-            photo=None
-        
-        )
-
-
         self.student = Student.objects.create_user(
             dni='22337788O',
             name=fake.name(),
@@ -48,6 +35,17 @@ class TestOwnerStudentDetailApiView(APITestCase):
         
         )
 
+        self.student_2 = Student.objects.create_user(
+            dni='11223399P',
+            name=fake.name(),
+            surname=fake.last_name(),
+            username='user2',
+            password='hola1234',
+            email=fake.email(), 
+            telephone=fake.phone_number(),
+            photo=None
+        
+        )
 
         self.admin = User.objects.create_superuser(
             dni='22334455A',
@@ -93,46 +91,39 @@ class TestOwnerStudentDetailApiView(APITestCase):
 
 
     def test_negative(self):
-        response = self.client.get(f'/owners/{self.owner.id}/student')
+        response = self.client.put(f'/students/profile-pass-change')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
-        response = self.client.get(f'/owners/{self.owner.id}/student')
+        response = self.client.put(f'/students/profile-pass-change')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
-        response = self.client.get(f'/owners/{self.owner_2.id}/student')
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_admin)
+        response = self.client.put(f'/students/profile-pass-change')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
-        response = self.client.get(f'/owners/{self.owner_2.id+10}/student')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-  
 
 
     def test_positive(self):
-
-        info = {
-            "username": self.owner.username,
-            "photo": self.owner.photo,
-            "name": self.owner.name,
-            "telephone": self.owner.telephone
-        }
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
-        response = self.client.get(f'/owners/{self.owner.id}/student')
+        password = {
+            'new_password':'contraseña'
+        }
+        response = self.client.put(f'/students/profile-pass-change', password)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, info)
+        self.assertEqual(response.data['message'], 'Contraseña actualizada correctamente')
+
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
+        password = {
+            'new_password': 'hola1234'
+        }
+        response = self.client.put(f'/students/profile-pass-change', password)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Contraseña actualizada correctamente')
   
 
-        info_2 = {
-            "username": self.owner_2.username,
-            "photo": self.owner_2.photo,
-            "name": self.owner_2.name,
-            "telephone": self.owner_2.telephone
-        }
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_admin)
-        response = self.client.get(f'/owners/{self.owner_2.id}/student')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, info_2)
+  
+
+
 

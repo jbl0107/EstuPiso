@@ -60,9 +60,18 @@ class TestOwnerPublicDetailApiView(APITestCase):
 
 
     def test_positive(self):
+
+        info = {
+            "username": self.owner.username
+        }
         response = self.client.get(f'/owners/{self.owner.id}/public')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, info)
 
 
+        info_2 = {
+            "username": self.owner_2.username
+        }
         response = self.client.get(f'/owners/{self.owner_2.id}/public')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, info_2)
