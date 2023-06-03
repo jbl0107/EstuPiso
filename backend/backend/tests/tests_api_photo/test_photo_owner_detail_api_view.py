@@ -1,8 +1,7 @@
 from faker import Faker
-
 from rest_framework import status
 from rest_framework.test import APITestCase
-from apis.models import Owner, User, Student, Property, Photo
+from apis.models import Owner, User, Student, Photo
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from tempfile import TemporaryDirectory
@@ -10,7 +9,8 @@ from django.conf import settings
 
 
 
-class TestPropertyPhotosApiView(APITestCase):
+
+class TestPhotoDetailApiView(APITestCase):
 
     
     def setUp(self):
@@ -71,7 +71,7 @@ class TestPropertyPhotosApiView(APITestCase):
         
         self.image_2 = SimpleUploadedFile(name='test_image_2.jpg', content=open(
             'backend/tests/tests_api_owner/test_image_2.jpg', 'rb').read(), content_type='image/jpeg')
-
+        
 
         self.photo = Photo.objects.create(
             photo = self.image,
@@ -80,63 +80,78 @@ class TestPropertyPhotosApiView(APITestCase):
 
         self.photo_2 = Photo.objects.create(
             photo = self.image_2,
-            owner = self.owner
-        )
-
-        self.photo_3 = Photo.objects.create(
-            photo = self.image,
-            owner = self.owner
-        )
-
-        self.photo_4 = Photo.objects.create(
-            photo = self.image_2,
             owner = self.owner_2
         )
 
-
-        self.property_owner = Property.objects.create(
-            title = 'titulo de ejemplo',
-            localization = 'Dirección X',
-            price = 170,
-            type = 'Inmueble completo',
-            dormitories = 3,
-            size = 100,
-            baths = 2,
-            owner = self.owner,
+        self.photo_3 = Photo.objects.create(
+            photo = self.image_2,
+            owner = self.owner
         )
 
-        self.property_owner_2 = Property.objects.create(
-            title = 'Titulo',
-            localization = 'Dirección Y',
-            price = 200,
-            type = 'Inmueble completo',
-            dormitories = 4,
-            size = 100,
-            baths = 3,
-            owner = self.owner_2,
-        )
 
-        self.property_owner.photos.set([self.photo, self.photo_2, self.photo_3])
-        self.property_owner_2.photos.set([self.photo_4])
+        login_owner = {
+            'username': self.owner.username,
+            'password': 'hola1234'
+        }
+        response_owner = self.client.post('/login/',login_owner, format='json')
+        self.assertEqual(response_owner.status_code, status.HTTP_200_OK)
 
 
+        login_student = {
+            'username': self.student.username,
+            'password': 'hola1234'
+        }
+        response_student = self.client.post('/login/',login_student, format='json')
+        self.assertEqual(response_student.status_code, status.HTTP_200_OK)
 
+
+        login_admin = {
+            'username': self.admin.username,
+            'password': 'developer'
+        }
+        response_admin = self.client.post('/login/', login_admin, format='json')
+        self.assertEqual(response_admin.status_code, status.HTTP_200_OK)
+        
+        self.token_owner = response_owner.data['access']
+        self.token_student = response_student.data['access']
+        self.token_admin = response_admin.data['access']
+
+
+        
     def test_negative(self):
-        response = self.client.get(f'/properties/{self.property_owner_2.id+10}/photos')
+
+        response = self.client.get(f'/photos/owner/{self.owner.id}')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
+        response = self.client.get(f'/photos/owner/{self.owner_2.id}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
+        response = self.client.get(f'/photos/owner/{self.owner_2.id}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
+        response = self.client.get(f'/photos/owner/{self.owner_2.id+10}')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
     def test_positive(self):
-        expected_photo_ids = [self.photo.id, self.photo_2.id, self.photo_3.id]
-        response = self.client.get(f'/properties/{self.property_owner.id}/photos')
+        expected_photo_ids = [self.photo.id, self.photo_3.id]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
+        response = self.client.get(f'/photos/owner/{self.owner.id}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         returned_photo_ids = [photo['id'] for photo in response.data]
         self.assertCountEqual(returned_photo_ids, expected_photo_ids)
-        
 
-        response = self.client.get(f'/properties/{self.property_owner_2.id}/photos')
+        expected_photo_ids_2 = [self.photo_2.id]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_admin)
+        response = self.client.get(f'/photos/owner/{self.owner_2.id}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['id'], self.photo_4.id)
+        returned_photo_ids_2 = [photo['id'] for photo in response.data]
+        self.assertCountEqual(returned_photo_ids_2, expected_photo_ids_2)
+
+
 
 
 

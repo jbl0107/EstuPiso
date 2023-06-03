@@ -39,7 +39,6 @@ def property_api_view(request):
     
     #create
     elif request.method == 'POST':
-        data = request.data
         data = request.data.copy()
         data['owner'] = request.user.id
         serializer = PropertySerializer(data = data) 

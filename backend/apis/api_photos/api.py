@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from apis.permissions_decorators import IsOwnerOrAdmin, IsOwner
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import NotAuthenticated
 
 
 from apis.models import Photo, Owner
@@ -35,7 +36,7 @@ def photo_api_view(request):
     
 
     if request.method == 'POST': 
-        data = request.data
+        data = request.data.copy()
         data['owner'] = request.user.id
         serializer = PhotoSerializer(data = data) 
         if serializer.is_valid():
@@ -54,6 +55,8 @@ def photo_detail_api_view(request, id):
     def check_permissions(request):
         
         if request.method == 'DELETE':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsOwnerOrAdmin]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):
@@ -95,7 +98,6 @@ def photo_detail_api_view(request, id):
 def photo_owner_detail_api_view(request, id):
 
     owner = Owner.objects.filter(id=id)
-    print(owner)
     if owner:
          
          if request.method == 'GET':

@@ -10,7 +10,7 @@ from django.conf import settings
 
 
 
-class TestPropertyDetailApiView(APITestCase):
+class TestPropertyValorationsApiView(APITestCase):
 
     
     def setUp(self):
