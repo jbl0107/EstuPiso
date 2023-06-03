@@ -13,6 +13,8 @@ from apis.api_rules.serializers import RuleSerializer
 from apis.api_photos.serializers import PhotoSerializer
 from apis.api_services.serializers import ServiceSerializer
 from apis.api_valoration.serializers import PropertyValorationSerializer
+from rest_framework.exceptions import NotAuthenticated
+
 
 
 @api_view(['GET', 'POST'])
@@ -38,7 +40,7 @@ def property_api_view(request):
     #create
     elif request.method == 'POST':
         data = request.data
-        data = request.POST.copy()
+        data = request.data.copy()
         data['owner'] = request.user.id
         serializer = PropertySerializer(data = data) 
         if serializer.is_valid():
@@ -57,12 +59,16 @@ def property_detail_api_view(request, id):
 
     def check_permissions(request):
         if request.method == 'PUT':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsOwner]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):
                     raise PermissionDenied(getattr(permission, 'message', None))
                 
         elif request.method == 'DELETE':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsOwnerOrAdmin]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):
@@ -90,7 +96,8 @@ def property_detail_api_view(request, id):
             if not aux:
                 return Response({"message":"No puede actualizar los datos de un inmueble de otro propietario"}, status=status.HTTP_403_FORBIDDEN)
            
-            data = request.data
+            
+            data = request.data.copy()
             data['owner'] = request.user.id
             serializer = PropertySerializer(property, data = data)
             if serializer.is_valid():

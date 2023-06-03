@@ -21,8 +21,6 @@ class TestStudentVerifyPassword(APITestCase):
         image = SimpleUploadedFile(name='test_image.jpg', content=open('backend/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
                                    content_type='image/jpeg')
         
-        image_2 = SimpleUploadedFile(name='test_image_2.jpg', content=open(
-            'backend/tests/tests_api_owner/test_image_2.jpg', 'rb').read(), content_type='image/jpeg')
         
 
         fake = Faker('es_ES')
