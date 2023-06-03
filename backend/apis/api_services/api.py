@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from apis.permissions_decorators import IsAdmin
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import NotAuthenticated
+
 
 from apis.models import Service
 from .serializers import ServiceSerializer
@@ -17,6 +19,8 @@ def service_api_view(request):
 
     def check_permissions(request):
         if request.method == 'POST':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsAdmin]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):
@@ -50,12 +54,16 @@ def service_detail_api_view(request, id):
 
     def check_permissions(request):
         if request.method == 'PUT':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsAdmin]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):
                     raise PermissionDenied(getattr(permission, 'message', None))
                 
         elif request.method == 'DELETE':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsAdmin]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):
