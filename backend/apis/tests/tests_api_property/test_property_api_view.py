@@ -66,11 +66,11 @@ class TestPropertyApiView(APITestCase):
             photo=None
         )
 
-        self.image = SimpleUploadedFile(name='test_image.jpg', content=open('backend/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
+        self.image = SimpleUploadedFile(name='test_image.jpg', content=open('apis/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
                                    content_type='image/jpeg')
         
         self.image_2 = SimpleUploadedFile(name='test_image_2.jpg', content=open(
-            'backend/tests/tests_api_owner/test_image_2.jpg', 'rb').read(), content_type='image/jpeg')
+            'apis/tests/tests_api_owner/test_image_2.jpg', 'rb').read(), content_type='image/jpeg')
 
 
         self.photo = Photo.objects.create(

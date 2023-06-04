@@ -18,7 +18,7 @@ class TestStudentVerifyPassword(APITestCase):
         self.temp_dir = TemporaryDirectory()
         settings.MEDIA_ROOT = self.temp_dir.name
         
-        image = SimpleUploadedFile(name='test_image.jpg', content=open('backend/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
+        image = SimpleUploadedFile(name='test_image.jpg', content=open('apis/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
                                    content_type='image/jpeg')
         
         

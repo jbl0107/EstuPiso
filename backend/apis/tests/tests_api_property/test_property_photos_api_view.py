@@ -2,7 +2,7 @@ from faker import Faker
 
 from rest_framework import status
 from rest_framework.test import APITestCase
-from apis.models import Owner, User, Student, Property, Photo, Rule, PropertyValoration
+from apis.models import Owner, User, Student, Property, Photo
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from tempfile import TemporaryDirectory
@@ -10,7 +10,7 @@ from django.conf import settings
 
 
 
-class TestPropertyValorationsApiView(APITestCase):
+class TestPropertyPhotosApiView(APITestCase):
 
     
     def setUp(self):
@@ -66,11 +66,11 @@ class TestPropertyValorationsApiView(APITestCase):
             photo=None
         )
 
-        self.image = SimpleUploadedFile(name='test_image.jpg', content=open('backend/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
+        self.image = SimpleUploadedFile(name='test_image.jpg', content=open('apis/tests/tests_api_owner/test_image.jpg', 'rb').read(), 
                                    content_type='image/jpeg')
         
         self.image_2 = SimpleUploadedFile(name='test_image_2.jpg', content=open(
-            'backend/tests/tests_api_owner/test_image_2.jpg', 'rb').read(), content_type='image/jpeg')
+            'apis/tests/tests_api_owner/test_image_2.jpg', 'rb').read(), content_type='image/jpeg')
 
 
         self.photo = Photo.objects.create(
@@ -83,11 +83,15 @@ class TestPropertyValorationsApiView(APITestCase):
             owner = self.owner
         )
 
-        self.rule = Rule.objects.create(
-            name = 'Regla 1',
+        self.photo_3 = Photo.objects.create(
+            photo = self.image,
+            owner = self.owner
         )
 
-    
+        self.photo_4 = Photo.objects.create(
+            photo = self.image_2,
+            owner = self.owner_2
+        )
 
 
         self.property_owner = Property.objects.create(
@@ -112,59 +116,27 @@ class TestPropertyValorationsApiView(APITestCase):
             owner = self.owner_2,
         )
 
-
-        self.valoration_property = PropertyValoration.objects.create(
-            value = 4,
-            title = 'Title',
-            review = 'Esto es una opinion de ejemplo',
-            valuer = self.student,
-            property = self.property_owner
-
-        )
-
-        self.valoration_property_2 = PropertyValoration.objects.create(
-            value = 5,
-            title = 'Titulo de ejemplo',
-            review = 'Review de la property',
-            valuer = self.student,
-            property = self.property_owner_2
-
-        )
-
-
-        self.valoration_property_3 = PropertyValoration.objects.create(
-            value = 1,
-            title = 'New title',
-            review = 'Review in english',
-            valuer = self.student,
-            property = self.property_owner
-
-        )
-
-        self.property_owner.rules.set([self.rule])
-        self.property_owner.photos.set([self.photo])
-
-        self.property_owner_2.photos.set([self.photo_2])
-
+        self.property_owner.photos.set([self.photo, self.photo_2, self.photo_3])
+        self.property_owner_2.photos.set([self.photo_4])
 
 
 
     def test_negative(self):
-        response = self.client.get(f'/properties/{self.property_owner_2.id+10}/valorations')
+        response = self.client.get(f'/properties/{self.property_owner_2.id+10}/photos')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
     def test_positive(self):
-        response = self.client.get(f'/properties/{self.property_owner.id}/valorations')
+        expected_photo_ids = [self.photo.id, self.photo_2.id, self.photo_3.id]
+        response = self.client.get(f'/properties/{self.property_owner.id}/photos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['id'], self.valoration_property.id)
-        self.assertEqual(response.data[1]['id'], self.valoration_property_3.id)
-        self.assertEqual(len(response.data), 2)
+        returned_photo_ids = [photo['id'] for photo in response.data]
+        self.assertCountEqual(returned_photo_ids, expected_photo_ids)
+        
 
-        response = self.client.get(f'/properties/{self.property_owner_2.id}/valorations')
+        response = self.client.get(f'/properties/{self.property_owner_2.id}/photos')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['id'], self.valoration_property_2.id)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.photo_4.id)
 
 
 
