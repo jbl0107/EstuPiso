@@ -175,7 +175,7 @@ class TestPropertyApiView(APITestCase):
             'photo': self.photo.id,
         }
         response = self.client.post('/properties/', property)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
         response = self.client.post('/properties/', {})

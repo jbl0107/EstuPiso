@@ -23,6 +23,8 @@ def property_api_view(request):
 
     def check_permissions(request):
         if request.method == 'POST':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsOwner]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):
