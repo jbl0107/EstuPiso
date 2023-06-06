@@ -12,6 +12,8 @@ from .serializers import StudentSerializer, StudentUpdateSerializer
 from apis.api_valoration.serializers import PropertyValorationSerializer
 
 from django.contrib.auth.hashers import check_password
+from rest_framework.exceptions import NotAuthenticated
+
 
 
 
@@ -24,6 +26,8 @@ def student_api_view(request):
     def check_permissions(request):
 
         if request.method == 'GET':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsAdmin]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):

@@ -32,19 +32,37 @@ class TestUserApiView(APITestCase):
             photo=None
         )
 
+        login_user = {
+            'username': self.user.username,
+            'password': 'hola1234'
+        }
+        response_user = self.client.post('/login/',login_user, format='json')
+        self.assertEqual(response_user.status_code, status.HTTP_200_OK)
 
 
-    def test_get_users(self):
+        login_admin = {
+            'username': self.admin.username,
+            'password': 'developer'
+        }
+        response_admin = self.client.post('/login/', login_admin, format='json')
+        self.assertEqual(response_admin.status_code, status.HTTP_200_OK)
+        
+        self.token_user = response_user.data['access']
+        self.token_admin = response_admin.data['access']
+
+
+
+    def test_negative_get_users(self):
+        response = self.client.get('/users/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_user)
         response = self.client.get('/users/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        # Usuario no admin intentado acceder
-        self.client.force_authenticate(user=self.user) #de esta manera nos ahorramos tener que pasarle el token a la petición get
-        response = self.client.get('/users/')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        # Usuario admin
-        self.client.force_authenticate(user=self.admin)
+        
+    def test_positive_get_users(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_admin)
         response = self.client.get('/users/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

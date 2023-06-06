@@ -10,6 +10,8 @@ from rest_framework.exceptions import PermissionDenied
 from apis.models import User, UserValoration, Student, Owner
 from .serializers import UserSerializer
 from apis.api_valoration.serializers import UserValorationSerializer
+from rest_framework.exceptions import NotAuthenticated
+
 
 
 @api_view(['GET', 'POST'])
@@ -19,6 +21,8 @@ def user_api_view(request):
     def check_permissions(request):
 
         if request.method == 'GET':
+            if 'HTTP_AUTHORIZATION' not in request.META:
+                raise NotAuthenticated()
             for permission_class in [IsAuthenticated, IsAdmin]:
                 permission = permission_class()
                 if not permission.has_permission(request, None):

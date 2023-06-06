@@ -147,7 +147,7 @@ class TestPhotoApiView(APITestCase):
             
         }
         response = self.client.post('/photos/', photo)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
         response = self.client.post('/photos/', {})

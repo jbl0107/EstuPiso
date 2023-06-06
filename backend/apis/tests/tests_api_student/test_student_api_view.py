@@ -46,23 +46,50 @@ class TestStudentApiView(APITestCase):
             photo=None
         )
 
+        login_owner = {
+            'username': self.owner.username,
+            'password': 'hola1234'
+        }
+        response_owner = self.client.post('/login/',login_owner, format='json')
+        self.assertEqual(response_owner.status_code, status.HTTP_200_OK)
+
+
+        login_student = {
+            'username': self.student.username,
+            'password': 'hola1234'
+        }
+        response_student = self.client.post('/login/',login_student, format='json')
+        self.assertEqual(response_student.status_code, status.HTTP_200_OK)
+
+
+        login_admin = {
+            'username': self.admin.username,
+            'password': 'developer'
+        }
+        response_admin = self.client.post('/login/', login_admin, format='json')
+        self.assertEqual(response_admin.status_code, status.HTTP_200_OK)
+        
+        self.token_owner = response_owner.data['access']
+        self.token_student = response_student.data['access']
+        self.token_admin = response_admin.data['access']
+
 
 
     def test_get_students(self):
         response = self.client.get('/students/')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         
-        self.client.force_authenticate(user=self.owner)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_owner)
         response = self.client.get('/students/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.client.force_authenticate(user=self.student)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_student)
         response = self.client.get('/students/')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
     def test_positive_get_students(self):
-        self.client.force_authenticate(user=self.admin)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token_admin)
         response = self.client.get('/students/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
