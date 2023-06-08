@@ -142,7 +142,7 @@ export const AnnouncementDetails = () => {
  
     <div className="p-4">
     {photos.length > 0 && (
-            <img src={'/api' + photos[currentPhotoIndex].photo} alt="Foto del inmueble" className="w-3/4 mx-auto rounded-lg mb-2 h-96"/>
+            <img src={'/api' + photos[currentPhotoIndex].photo} alt="Foto del inmueble" className="w-3/6 mx-auto rounded-lg mb-2 h-96"/>
           )}
           {photos.length > 1 && (
             <>

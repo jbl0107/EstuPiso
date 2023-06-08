@@ -75,7 +75,7 @@ class TestStudentApiView(APITestCase):
 
 
 
-    def test_get_students(self):
+    def test_negative_get_students(self):
         response = self.client.get('/students/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         
