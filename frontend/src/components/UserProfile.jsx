@@ -598,7 +598,7 @@ export const UserProfile = () => {
       </form>            
 
       <button  className="px-4 py-2 text-white bg-sky-400 rounded-lg mt-7 hover:bg-blue-400 font-bold" 
-        onClick={() => handleOpenModal(true)}>
+        onClick={handleOpenModal}>
         Actualizar contraseña
       </button>
 

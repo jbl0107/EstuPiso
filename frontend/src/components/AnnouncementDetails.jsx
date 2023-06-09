@@ -125,6 +125,18 @@ export const AnnouncementDetails = () => {
     
   }
 
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+
+  };
+
 
   if (!property) {
     return <></>;
@@ -297,17 +309,45 @@ export const AnnouncementDetails = () => {
 
     {isOwner && property.owner == user_id ? (
       <div className='flex justify-center mb-7'>
-      <form onSubmit={handleDelete}>
         <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none
-         focus:shadow-outline" type="submit">
-          Eliminar
+         focus:shadow-outline" onClick={handleOpenModal}>
+          Borrar anuncio
         </button>
-        {errorMessage && <p className="text-red-600 font-bold">{errorMessage}</p>}
-      </form>
+
+        {showModal ? (
+        <>
+          <div className="modal-backdrop" onClick={handleCloseModal}></div>
+          <div className="modal-container">
+            <div className="bg-white p-8 rounded shadow transition duration-300 ease-in-out transform scale-100">
+              <h2 className="text-2xl font-bold mb-4">
+                ¿Estas seguro de que quieres eliminar este anuncio?
+              </h2>
+
+              <form onSubmit={handleDelete}>
+                <button className="px-4 py-2 text-white bg-sky-400 rounded-lg mt-7 hover:bg-blue-400 font-bold mr-36 ml-28" 
+                onClick={handleCloseModal}>
+                  Volver atrás
+                </button>
+                <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none
+                focus:shadow-outline" type="submit">
+                  Eliminar
+                </button>
+              </form>
+
+            </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+      
     </div>
+    
     ):(
       <></>
     )}
+
+      
     
     </>
   );
