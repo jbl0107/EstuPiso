@@ -332,6 +332,7 @@ export const AnnouncementDetails = () => {
                 focus:shadow-outline" type="submit">
                   Eliminar
                 </button>
+                {errorMessage && <p className="text-red-600 font-bold">{errorMessage}</p>}
               </form>
 
             </div>

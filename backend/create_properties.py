@@ -28,7 +28,7 @@ BEGIN
 	UNION ALL
 	SELECT '/properties/Imagen_3.jpg', id FROM apis_user WHERE dni = '27883209C'
 	UNION ALL
-	SELECT '/properties/Imagen_4.jpg', id FROM apis_user WHERE dni = '56974511B'
+	SELECT '/properties/Imagen_4.jpg', id FROM apis_user WHERE dni = '27883209C'
 	UNION ALL
 	SELECT '/properties/Imagen_5.jpg', id FROM apis_user WHERE dni = '56974511B'
 	UNION ALL

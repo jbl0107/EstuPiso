@@ -5,6 +5,8 @@ import { useContext } from 'react';
 import { PhoneInput } from './PhoneInput'
 import api from '../api/api.js';
 import jwtDecode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -406,7 +408,69 @@ export const UserProfile = () => {
   }, []);
 
 
-  
+
+
+  const navigate = useNavigate();
+  const[errorMessage, setErrorMessage] = useState(null);
+  const handleDeleteAccount = async (event) => {
+    event.preventDefault();
+
+    try {
+
+      const token = localStorage.getItem('jwtToken');
+      const userId = jwtDecode(token).user_id;
+
+      const userTypeResponse = await fetch(`/api/users/${userId}/type`);
+      const userTypeData = await userTypeResponse.json();
+      
+      let response;
+      if (userTypeData.userType === "student") {
+        response = await api.delete(`/api/students/${userId}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+
+        });
+        navigate('/');
+        handleLogout();
+      }
+      else if (userTypeData.userType === "owner") {
+        response = await api.delete(`/api/owners/${userId}`, {
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        }
+
+        });
+        navigate('/');
+        handleLogout();
+      }
+      
+      
+    } catch(error) {
+      console.log(error)
+
+      setErrorMessage('Ocurrió un error al borrar la cuenta.');
+    }
+
+  }
+
+
+  const [showModalDeleteAccount, setshowModalDeleteAccount] = useState(false);
+
+  const handleOpenModalDeleteAccount = () => {
+    setshowModalDeleteAccount(true);
+
+  }
+
+  const handleCloseModalDeleteAccount = () => {
+    setshowModalDeleteAccount(false);
+    setCurrentPassword("");
+    setShowChangePasswordForm(false);
+    setErrorCurrentPassword(null);
+
+  };
+
+
   if (!userInfo) {
     return <></>;
   }
@@ -637,61 +701,135 @@ export const UserProfile = () => {
                   </div>
                 </form>
                 </>
-      )}
+              )}
 
-      {showChangePasswordForm && (
-        <>
-        <form onSubmit={handleChangePassword}>
-          <div className="sm:col-span-3">
 
-            
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="password">
-                Nueva contraseña
-            </label>
 
-            <div className='relative'>
-              <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
-                  <img src="/src/assets/lock.svg" alt="Lock icon" className="w-6 h-5"/>
-              </span>
+              {showChangePasswordForm && (
+                <>
+                <form onSubmit={handleChangePassword}>
+                  <div className="sm:col-span-3">
 
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 mb-3 leading-tight 
-              focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="***********" 
-              name="password" required={true}/>
-              {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
+                    
+                    <label className="block text-black text-sm font-bold mb-2" htmlFor="password">
+                        Nueva contraseña
+                    </label>
 
-            </div>
+                    <div className='relative'>
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
+                          <img src="/src/assets/lock.svg" alt="Lock icon" className="w-6 h-5"/>
+                      </span>
 
-          </div>
+                      <input className="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 mb-3 leading-tight 
+                      focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="***********" 
+                      name="password" required={true}/>
+                      {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
 
-          <div className="sm:col-span-3">
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="password2">
-                Repita la contraseña
-            </label>
+                    </div>
 
-            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight 
-            focus:outline-none focus:shadow-outline" id="password2" type="password" placeholder="***********" 
-            name="password2" required={true}/>
-            {password2Error && <p className="text-red-600 text-sm">{password2Error}</p>}
+                  </div>
 
-          </div>
+                  <div className="sm:col-span-3">
+                    <label className="block text-black text-sm font-bold mb-2" htmlFor="password2">
+                        Repita la contraseña
+                    </label>
 
-          <div className="flex justify-center">
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight 
+                    focus:outline-none focus:shadow-outline" id="password2" type="password" placeholder="***********" 
+                    name="password2" required={true}/>
+                    {password2Error && <p className="text-red-600 text-sm">{password2Error}</p>}
 
-            <button className="px-4 py-2 text-white bg-blue-500 rounded mt-2 hover:bg-blue-700" type='submit'>
-              Cambiar contraseña
-            </button>
-          </div>
-        </form>
-        </>
-      )}
+                  </div>
 
-                            
+                  <div className="flex justify-center">
+
+                    <button className="px-4 py-2 text-white bg-blue-500 rounded mt-2 hover:bg-blue-700" type='submit'>
+                      Cambiar contraseña
+                    </button>
+                  </div>
+                </form>
+                </>
+              )}
+
+                              
             </div>
           </div>
         </>
         )}
 
+        <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none
+         focus:shadow-outline mt-9" onClick={handleOpenModalDeleteAccount}>
+          Borrar cuenta
+        </button>
+
+
+
+        {showModalDeleteAccount && (
+        <>
+        <div className="modal-backdrop" onClick={handleCloseModalDeleteAccount} ></div>
+          <div className="modal-container">
+            <div className="bg-white p-8 rounded shadow transition duration-300 ease-in-out transform scale-100">
+              <h2 className="text-2xl font-bold mb-4">¿Estas seguro de que quieres eliminar tu cuenta?</h2>
+
+              {!showChangePasswordForm && (
+                <>
+
+                <form onSubmit={handleVerifyCurrentPassword}>
+
+                  <div className="sm:col-span-3">
+                    <label
+                      className="block text-black text-sm font-bold mb-2"
+                      htmlFor="current_password" >
+                      Introduce tu contraseña actual
+                    </label>
+
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight 
+                      focus:outline-none focus:shadow-outline" id="current_password" type="password" placeholder="***********"
+                      value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}/>
+                      {errorCurrentPassword && <p className="text-red-600 text-sm">{errorCurrentPassword}</p>}
+                  </div>
+
+                  <div className="flex justify-center">
+
+                    <button className="px-4 py-2 text-white bg-blue-500 rounded mt-2 hover:bg-blue-700" type='submit'>
+                      Verificar contraseña actual
+                    </button>
+                  </div>
+                </form>
+                </>
+              )}
+
+
+
+              {showChangePasswordForm && (
+                <>
+                <form onSubmit={handleDeleteAccount}>
+                  <button className="px-4 py-2 text-white bg-sky-400 rounded-lg mt-7 hover:bg-blue-400 font-bold mr-36 ml-28" 
+                  onClick={handleCloseModalDeleteAccount}>
+                    Volver atrás
+                  </button>
+
+                  <button className='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none
+                  focus:shadow-outline mt-9' type='submit'>
+                    Borrar cuenta
+                  </button>
+                  {errorMessage && <p className="text-red-600 font-bold">{errorMessage}</p>}
+                </form>
+                </>
+              )}
+
+                              
+            </div>
+          </div>
+        </>
+        )}
+
+
+        
+          
+        
     </div>
+    
 
     
   </>
