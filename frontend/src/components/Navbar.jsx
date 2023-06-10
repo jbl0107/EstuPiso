@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import jwtDecode from 'jwt-decode';
 import { DropdownMenu } from "./DropDown.jsx";
 import { getUserInfo } from '../api/auth';
@@ -59,6 +59,19 @@ export function Navbar() {
     };
   }, []);
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [menuRef]);
 
 
   return (
@@ -119,15 +132,15 @@ export function Navbar() {
 
 
             {isLoggedIn ? (
-              <div className="ml-5">
-              <DropdownMenu userInfo={userInfo}>
+              <div className="ml-5" ref={menuRef}>
+              <DropdownMenu userInfo={userInfo} isOpen={isOpen} setIsOpen={setIsOpen}>
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
                   <img src="/src/assets/user.svg" alt="Lock icon" className="w-6 h-5"/>
                 </span>
 
                 
                 <Link to="/userProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100
-                 hover:text-blue-800 rounded-t-md pl-10">Mi perfil</Link>
+                 hover:text-blue-800 rounded-t-md pl-10" onClick={() => setIsOpen(false)}>Mi perfil</Link>
 
 
 
@@ -139,7 +152,7 @@ export function Navbar() {
                   </span>
 
                   <Link to="/yourAnnouncements" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100
-                  hover:text-blue-800 rounded-t-md pl-10">Mis anuncios</Link>
+                  hover:text-blue-800 rounded-t-md pl-10" onClick={() => setIsOpen(false)}>Mis anuncios</Link>
                  </>
                 ):(
                   <></>

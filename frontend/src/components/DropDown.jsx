@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 
 
-export const DropdownMenu = ({ children, userInfo }) => {
-    const [isOpen, setIsOpen] = useState(false);
+export const DropdownMenu = ({ children, userInfo, setIsOpen, isOpen  }) => {
   
     const handleToggle = () => setIsOpen(!isOpen);
 
