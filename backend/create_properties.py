@@ -45,7 +45,7 @@ BEGIN
 	SELECT '/properties/Imagen_11.jpg', id FROM apis_user WHERE dni = '56974511B';
 	
 	INSERT INTO apis_service (`name`) VALUES ('WiFi'), ('Aire acondicionado'), ('Calefacción'), ('Lavadora');
-	INSERT INTO apis_rule (`name`) VALUES ('No se permite fuma'), ('No se permiten mascotas'), ('No se permiten hacer fiestas');
+	INSERT INTO apis_rule (`name`) VALUES ('No se permite fumar'), ('No se permiten mascotas'), ('No se permiten hacer fiestas');
 	
 	
 	INSERT INTO apis_property (title, localization, price, `type`, dormitories, size, baths, owner_id)
@@ -89,10 +89,10 @@ BEGIN
 	
 	INSERT INTO apis_property_rules (property_id, rule_id)
 	SELECT p.id, r.id FROM apis_property p, apis_rule r
-	WHERE (p.title = 'Piso en el centro de Sevilla' AND r.`name` = 'No fumar')
-	OR (p.title = 'Habitación con baño privado' AND r.`name` = 'No mascotas')
-	OR (p.title = 'Piso en el centro de Sevilla' AND r.`name` = 'No fumar')
-	OR (p.title = 'Cama en habitación con otro compañero' AND r.`name` = 'No fiestas');
+	WHERE (p.title = 'Piso en el centro de Sevilla' AND r.`name` = 'No se permite fumar')
+	OR (p.title = 'Habitación con baño privado' AND r.`name` = 'No se permiten mascotas')
+	OR (p.title = 'Piso en el centro de Sevilla' AND r.`name` = 'No se permite fumar')
+	OR (p.title = 'Cama en habitación con otro compañero' AND r.`name` = 'No se permiten hacer fiestas');
 	
 	
 	INSERT INTO apis_property_services (property_id, service_id)

@@ -53,13 +53,23 @@ export const AnnouncementDetails = () => {
   }, [property]);
 
   
-
-
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  
+  //El código da error si incluyo el else para setear el error. Tal como está la página no se cae, solo muestra la navbar
   useEffect(() => {
     fetch(`/api/properties/${id}`)
-      .then((response) => response.json())
-      .then((data) => setProperty(data));
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } 
+      })
+      .then((data) => setProperty(data))
+      .catch((error) => {
+        setError(error.message);
+      });
   }, [id]);
+
 
 
 
@@ -101,7 +111,6 @@ export const AnnouncementDetails = () => {
 
   const[errorMessage, setErrorMessage] = useState(null);
 
-  const navigate = useNavigate();
   const handleDelete = async (event) => {
     event.preventDefault();
 
