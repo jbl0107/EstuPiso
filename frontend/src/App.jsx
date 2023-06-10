@@ -35,7 +35,7 @@ export function App() {
         <Route path="/createAnnouncement" element={<CreateAnnouncement />} />
         <Route path="/userProfile" element={<UserProfile />} />
         <Route path="/yourAnnouncements" element={<OwnerAnnouncements />} />
-ç
+
       </Routes>
       </AuthProvider>
 
