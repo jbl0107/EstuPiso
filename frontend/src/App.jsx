@@ -9,6 +9,7 @@ import { CreateAnnouncement } from './components/CreateAnnouncement';
 import { UserProfile } from './components/UserProfile';
 
 import { AuthProvider } from './api/AuthContext';
+import { OwnerAnnouncements } from './components/OwnerAnnouncements';
 
 
 
@@ -33,6 +34,7 @@ export function App() {
         <Route path="/announcements/:id" element={<AnnouncementDetails />} />
         <Route path="/createAnnouncement" element={<CreateAnnouncement />} />
         <Route path="/userProfile" element={<UserProfile />} />
+        <Route path="/yourAnnouncements" element={<OwnerAnnouncements />} />
 ç
       </Routes>
       </AuthProvider>
