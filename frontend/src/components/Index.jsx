@@ -3,17 +3,22 @@ import { Carousel } from './Carousel';
 import { Feature } from './functions';
 
 
-const advantages = [
-  { icon: '🎓', text: 'Publicar anuncios de estudiantes como estudiante'},
+const actualAdvantages = [
   { icon: '🏢', text: 'Publicar anuncios de inmuebles como propietario'},
-  { icon: ' 📝 ', text: 'Publicar experiencias sobre tus viajes como estudiante'},
-  { icon: '📱', text: 'Ver el telefono de los usuarios registrados'},
-  { icon: '💬', text: 'Enviar y recibir mensajes'},
-  { icon: '⭐️', text: 'Realizar valoraciones'},
+  { icon: '📱', text: 'Ver el teléfono de los propietarios registrados'},
+  
+  
   
   
 
 ];
+
+const proxAdvantages = [
+  { icon: '🎓', text: 'Publicar anuncios de estudiantes'},
+  { icon: ' 📝 ', text: 'Publicar experiencias sobre tus viajes'},
+  { icon: '💬', text: 'Enviar y recibir mensajes'},
+  { icon: '⭐️', text: 'Realizar valoraciones'},
+]
 
 
 export const Index = ( ) => {
@@ -37,12 +42,23 @@ export const Index = ( ) => {
 
 
       <div className="flex flex-wrap">
-      {advantages.map((advantage) => (
-        <div key={advantage.text} className="w-1/3 p-2">
+      {actualAdvantages.map((advantage) => (
+        <div key={advantage.text} className="w-1/2 p-2">
           <Feature icon={advantage.icon} text={advantage.text} />
         </div>
       ))}
       </div>
+
+      <p className="mb-2 text-xl mt-3 font-bold">Proximamente:</p>
+      <div className="flex flex-wrap">
+      {proxAdvantages.map((advantage) => (
+        <div key={advantage.text} className="w-1/2 p-2">
+          <Feature icon={advantage.icon} text={advantage.text} />
+        </div>
+      ))}
+      </div>
+
+
 
         <Carousel/>
       </div>
