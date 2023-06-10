@@ -10,9 +10,9 @@ export const DropdownMenu = ({ children, userInfo, setIsOpen, isOpen  }) => {
   
     return (
       <div className="relative">
-        <button onClick={handleToggle}>
+        <button onClick={handleToggle} title='Desplegable'>
           {userInfo && userInfo.photo ? (
-            <img className="h-12 w-12 rounded-full" src={'api/'+userInfo.photo}/>
+            <img className="h-12 w-12 rounded-full" src={'api/'+userInfo.photo} title='Foto de perfil'/>
           ) : (
             <UserCircleIcon className="h-12 w-12 text-gray-700" aria-hidden="true" />
           )}

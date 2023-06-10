@@ -79,7 +79,7 @@ export function Navbar() {
       <nav className="flex items-center justify-between flex-wrap bg-gradient-to-r from-blue-700 to-blue-300 p-6 w-full 
       fixed top-0 left-0 z-10">
         <div className="flex items-center flex-shrink-0 text-white mr-6">
-          <Link to="/"><img className="md:h-full md:w-52" src="/Logo.png"/></Link>
+          <Link to="/"><img className="md:h-full md:w-52" src="/Logo.png" title="Logo"/></Link>
       
         </div>
        
@@ -118,16 +118,7 @@ export function Navbar() {
           </div>
 
           
-            {isLoggedIn ? (
-              <div className="mr-8 mb-10">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-2 mt-2">
-                    <img src="/src/assets/bell.svg" alt="Lock icon" className="w-6 h-6"/>
-                </span>
-              </div>
-
-            ):(
-              <></>
-            )}
+            
 
 
 

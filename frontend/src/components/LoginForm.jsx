@@ -75,11 +75,6 @@ export const LoginForm = () => {
                         <label className="block text-white text-sm font-bold mb-2" htmlFor="password">
                             Password
                         </label>
-
-                        <Link className="text-sm font-bold text-white hover:text-cyan-300
-                            hover:underline" to="#">
-                        Olvidaste tu contraseña?
-                        </Link>
                         
                     </div>
 
