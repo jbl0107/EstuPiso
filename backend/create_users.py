@@ -8,11 +8,11 @@ django.setup()
 
 
 users = [
-    ('27883209C', 'Manuel', 'Moreno Rodríguez', 'manuel_94', 'manuelrodriguez@alum.us.es', 'hola1234', '+34672451098', '/users/Foto_perfil_1.png', 1, 0),
-    ('11974509A', 'Pepe', 'García Luque', 'pepgar', 'pepgar@gmail.com', 'hola1234', '+34632450461', '', 1, 0),
+    ('27883209C', 'Manuel', 'Moreno Rodríguez', 'manuel_94', 'manuelrodriguez@alum.us.es', 'asdf1234', '+34672451098', '/users/Foto_perfil_1.png', 1, 0),
+    ('11974509A', 'Pepe', 'García Luque', 'pepgar', 'pepgar@gmail.com', 'asdf1234', '+34632450461', '', 1, 0),
     ('29494873L', 'Jesús', 'Ballestero López', 'jesballop', 'jesballop@alum.us.es', 'adminPass', '+34623406798', '/users/user-avatar.png', 1, 1),
-    ('56974511B', 'Carlos', 'Ruiz Galeano', 'car', 'car@gmail.com', 'hola1234', '+34711450461', '', 1, 0),
-    ('97376037H', 'Lucía', 'Romero Vera', 'lucia_00', 'lucia2000@gmail.com', 'hola1234', '+34690335690', '/users/Foto_perfil_2.jpg', 1, 0)
+    ('56974511B', 'Carlos', 'Ruiz Galeano', 'car', 'car@gmail.com', 'asdf1234', '+34711450461', '', 1, 0),
+    ('97376037H', 'Lucía', 'Romero Vera', 'lucia_00', 'lucia2000@gmail.com', 'asdf1234', '+34690335690', '/users/Foto_perfil_2.jpg', 1, 0)
 ]
 
 

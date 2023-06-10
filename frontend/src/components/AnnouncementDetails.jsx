@@ -123,7 +123,7 @@ export const AnnouncementDetails = () => {
       }
 
       });
-      navigate('/announcements');
+      navigate('/');
 
     } catch(error) {
 
