@@ -53,7 +53,7 @@ export const LoginForm = () => {
 
                 <div className="mb-4">
                     <label className="block text-white text-sm font-bold mb-2" htmlFor="username">
-                        Username
+                        Nombre de usuario
                     </label>
 
                     <div className='relative'>
@@ -63,7 +63,7 @@ export const LoginForm = () => {
                         </span>
 
                         <input className="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 leading-tight 
-                            focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" 
+                            focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="username" 
                             name="username" required={true}/>
                     </div>
                     
@@ -73,7 +73,7 @@ export const LoginForm = () => {
                     <div className="flex justify-between items-center">
 
                         <label className="block text-white text-sm font-bold mb-2" htmlFor="password">
-                            Password
+                            Contraseña
                         </label>
                         
                     </div>
