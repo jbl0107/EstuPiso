@@ -90,7 +90,7 @@ export function Navbar() {
               ${
                 location.pathname === '/' ? 'bg-gray-700' : ''
               }`}>
-              Home
+              Inicio
             </Link>
 
 

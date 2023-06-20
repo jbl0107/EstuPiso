@@ -110,7 +110,7 @@ class Photo(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, null=False, blank=False, related_name="photos_for_properties")
 
     def __str__(self):
-        return self.photo
+        return f'El propietario de esta foto es: {self.owner}'
     
 
 
