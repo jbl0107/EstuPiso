@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
+import re
 
 
 
@@ -41,6 +43,8 @@ class UserManager(BaseUserManager):
         user.isAdministrator = True
         user.save()
         return user
+    
+    
 
 
 class User(AbstractBaseUser):
@@ -68,6 +72,20 @@ class User(AbstractBaseUser):
     
     def has_module_perms(self, app_label):
         return True
+    
+    def save(self, *args, **kwargs):
+        self.set_password(self.password)
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        super().clean()
+        if len(self.password) < 8:
+            raise ValidationError('La contraseña debe tener al menos 8 caracteres')
+            
+        nif_regex = re.compile(r'^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$', re.IGNORECASE)
+        nie_regex = re.compile(r'^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$', re.IGNORECASE)
+        if not nif_regex.match(self.dni) and not nie_regex.match(self.dni):
+            raise ValidationError('El formato del DNI no es válido')
     
     @property
     def is_staff(self):
