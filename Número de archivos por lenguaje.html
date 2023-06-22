@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Lenguaje', 'Archivos'],
+          ['Python (75)', 75],
+          ['JSON (2)', 2],
+          ['JSX (17)', 17],
+          ['JavaScript (7)', 7],
+          ['CSS (1)', 1],
+          ['Text (1)', 1],
+          ['SVG (11)', 11],
+          ['HTML (1)', 1],
+          ['Markdown (1)', 1]
+        ]);
+
+        var options = {
+          title: 'Número de archivos por lenguaje',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_2'));
+
+        chart.draw(data, options);
+
+        document.getElementById('total_files_1').textContent = 'Número total de ficheros: 116';
+      }
+
+    </script>
+  </head>
+  <body>
+    <div id="piechart_2" style="width: 900px; height: 500px;"></div>
+    <div id="total_files_1"></div>
+  </body>
+</html>
+
