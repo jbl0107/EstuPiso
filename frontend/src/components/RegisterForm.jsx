@@ -84,6 +84,11 @@ export const RegisterForm = () => {
         setPassword2Error(null);
         setTypeError(null);
         setErrorMessageRegister(null);
+
+        if (event.target.password.value != event.target.password2.value){
+            setPassword2Error('Las contraseñas no coinciden');
+            return;
+        }
         
         try {
 
@@ -141,10 +146,6 @@ export const RegisterForm = () => {
                 }
                 if (error.response.data.telephone) {
                     setTelephoneError(error.response.data.telephone[0]);
-                }
-
-                if (event.target.password.value != event.target.password2.value){
-                    setPassword2Error('Las contraseñas no coinciden')
                 }
 
 
